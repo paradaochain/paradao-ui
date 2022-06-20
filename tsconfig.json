@@ -18,6 +18,8 @@
     "baseUrl": "src",
     "paths": {
       "@components/*": ["components/*"],
+      "@utils/*": ["utils/*"],
+      "@icons/*": ["icons/*"],
       "@interfaces/*": ["interfaces/*"],
       "@providers/*": ["providers/*"],
       "@views/*": ["views/*"],

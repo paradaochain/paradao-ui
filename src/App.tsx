@@ -1,10 +1,9 @@
 import React, { Suspense } from 'react';
 import AppRouter from './AppRouter';
-import { Spinner } from 'flowbite-react';
 
 const App: React.FC = () => {
   return (
-    <Suspense fallback={<Spinner aria-label="Center-aligned spinner example" />}>
+    <Suspense fallback={<h1 aria-label="loading screen">Loading ParaDAO...</h1>}>
       <AppRouter />
     </Suspense>
   );
