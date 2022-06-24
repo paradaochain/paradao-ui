@@ -19,7 +19,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children: Component }) => {
     <ScreenContainer>
       {/* TODO  mobile menu */}
       { !isMobile && <LayoutSidebar /> }
-      <main tw="flex flex-col flex-1 justify-around items-center">{Component}</main>
+      <main tw="m-6 flex flex-col flex-1 justify-start items-start">{Component}</main>
     </ScreenContainer>
   );
 };

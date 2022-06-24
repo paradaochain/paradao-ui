@@ -1,53 +1,202 @@
-import React, { FC } from 'react';
+import React, { FC, PropsWithChildren , useState} from 'react';
 import tw from 'twin.macro';
-// import { Circle, CircleComplete, CircleOutline, Next } from '@icons/mui';
+import { CircleComplete, CircleOutline, Next } from '@icons/mui';
 
-const H1 = tw.h1`text-2xl text-blue-800`;
+type Sections = 'DaoInfo' | 'Links' | 'Members' | 'Voting';
 
 const Create: React.FC = () => {
+  const [ visibleSection, setVisibleSection ] = useState<Sections>('DaoInfo');
   return (
-    <div tw="flex flex-col justify-center items-center">
-      <H1>Create New DAO</H1>
-      <div tw="flex flex-row justify-center items-center">
-        <FormTimeline />
+    <div tw="ml-4 my-4 space-y-4 flex flex-col justify-center items-start">
+      <h1 tw="ml-2 text-2xl text-blue-800">Create New DAO</h1>
+      <div tw="space-x-12 flex flex-row justify-center items-start">
+        <FormSteps setVisible={ setVisibleSection }/>
+        <DaoForm setVisible={ setVisibleSection } visibleSection={ visibleSection }/>
       </div>
     </div>
   );
 };
 
-// Flowbite example, was thinking to use some of this styling for the form to create a dao, where each point is a section of the form
+export default Create;
+
+const StepsOl = tw.ol`m-4 relative border-l border-gray-200 dark:border-gray-700 border-dashed`;
+const StepLiLast = tw.li`ml-6 cursor-pointer`;
+const StepLi = tw(StepLiLast)`mb-10`;
+const StepSvgContainer = tw.div`flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white`;
+const StepDoneSvgContainer = tw(StepSvgContainer)`bg-green-400`;
+const StepTodoSvgContainer = tw(StepSvgContainer)`bg-gray-300`;
+const StepH3 = tw.h3`text-base font-semibold text-gray-900 dark:text-gray-900`;
+
 // similar to https://app.astrodao.com/create-dao-new
-const FormTimeline: FC = () => {
+const FormSteps: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
+  // TODO add validation to check that inputs are filled in, and then mark sections as complete
+  const Done = () => <StepDoneSvgContainer><CircleComplete/></StepDoneSvgContainer>;
+  const Todo = () => <StepTodoSvgContainer><CircleOutline/></StepTodoSvgContainer>;
+
   return (
-    <ol tw="relative border-l border-gray-200 dark:border-gray-700">
-      <li tw="mb-10 ml-4">
-        <div tw="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
-        <time tw="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">February 2022</time>
-        <h3 tw="text-lg font-semibold text-gray-900 dark:text-white">Application UI code in Tailwind CSS</h3>
-        <p tw="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
-          Get access to over 20+ pages including a dashboard layout, charts, kanban board, calendar, and pre-order E-commerce and Marketing
-          pages.
-        </p>
-      </li>
-      <li tw="mb-10 ml-4">
-        <div tw="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
-        <time tw="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">March 2022</time>
-        <h3 tw="text-lg font-semibold text-gray-900 dark:text-white">Marketing UI design in Figma</h3>
-        <p tw="text-base font-normal text-gray-500 dark:text-gray-400">
-          All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the
-          project.
-        </p>
-      </li>
-      <li tw="ml-4">
-        <div tw="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
-        <time tw="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 2022</time>
-        <h3 tw="text-lg font-semibold text-gray-900 dark:text-white">E-Commerce UI code in Tailwind CSS</h3>
-        <p tw="text-base font-normal text-gray-500 dark:text-gray-400">
-          Get started with dozens of web components and interactive elements built on top of Tailwind CSS.
-        </p>
-      </li>
-    </ol>
+    <StepsOl>
+      <StepLi onClick={ () => setVisible('DaoInfo') }>
+        { true ? <Done /> : <Todo /> }
+        <StepH3>DAO Info</StepH3>
+      </StepLi>
+      <StepLi onClick={ () => setVisible('Links') }>
+        { true ? <Done /> : <Todo /> }
+        <StepH3>Social Media</StepH3>
+      </StepLi>
+      <StepLi onClick={ () => setVisible('Members') }>
+        { false ? <Done /> : <Todo /> }
+        <StepH3>Members</StepH3>
+      </StepLi>
+      <StepLiLast onClick={ () => setVisible('Voting') }>
+        { false ? <Done /> : <Todo /> }
+        <StepH3>Voting</StepH3>
+      </StepLiLast>
+    </StepsOl>
   );
 };
 
-export default Create;
+const DaoForm: FC<{ setVisible: (x: Sections) => void, visibleSection: string }> = ({ setVisible, visibleSection }) => {
+  return (
+    <FormCard>
+      <form tw="w-full h-full relative">
+          { visibleSection === 'DaoInfo' && <DaoInfoFormSection setVisible={ setVisible }/> }
+          { visibleSection === 'Links' && <LinksFormSection setVisible={ setVisible }/> }
+          { visibleSection === 'Members' && <MembersFormSection setVisible={ setVisible }/> }
+          { visibleSection === 'Voting' && <VotingFormSection /> }
+      </form>
+    </FormCard>
+  );
+};
+
+const CardContainer = tw.div`block p-6 m-4 height[28rem] max-w-lg bg-white rounded-lg border border-gray-200 shadow-md`;
+const FormCard: FC<PropsWithChildren> = ({ children }) => {
+  return (
+    <CardContainer>
+      { children }
+    </CardContainer>
+  );
+};
+
+const InputContainer = tw.div`relative z-0 w-full mb-6`;
+const Input = tw.input`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600`;
+const Label = tw.label`peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6`;
+const TextArea = tw.textarea`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600`;
+const SectionBtn = tw.button`inline-flex items-center absolute right-0 bottom-0 py-2 px-3 text-sm font-medium text-center text-white bg-gray-700 rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300`;
+const AdminCheckBox = tw.input`w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring focus:ring-blue-300`;
+const AdminCheckLabel = tw.label`ml-2 text-sm font-medium text-gray-500`;
+
+const DaoInfoFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
+  return(
+    <>
+      <h1 tw="mb-6 text-2xl text-gray-900">Dao Name and description</h1>
+      <InputContainer className="group">
+        <Input tw="w-48" className="peer" type="text" name="dao_name" placeholder=" " required />
+        <Label htmlFor="dao_name">Dao Name</Label>
+      </InputContainer>
+      <InputContainer>
+        <Input tw="w-36" className="peer" type="text" name="token" placeholder=" " required />
+        <Label htmlFor="token">Token Name</Label>
+      </InputContainer>
+      <InputContainer>
+        <TextArea id="descrip" rows={ 2 } tw="w-96" className="peer" name="descrip" placeholder={" "} required />
+        <Label htmlFor="descrip">Description</Label>
+      </InputContainer>
+      <SectionBtn onClick={ () => setVisible('Links') }>
+        Next
+        <Next />
+      </SectionBtn>
+    </>
+  );
+};
+
+const LinksFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
+  return(
+    <>
+      <h1 tw="mb-6 text-2xl text-gray-900">Add Social Media Links</h1>
+      <InputContainer className="group">
+        <Input tw="w-96" className="peer" type="text" name="facebook" placeholder=" " required />
+        <Label htmlFor="facebook">Facebook Link</Label>
+      </InputContainer>
+      <InputContainer>
+        <Input tw="w-96" className="peer" type="text" name="insta" placeholder=" " required />
+        <Label htmlFor="insta">Instagram</Label>
+      </InputContainer>
+      <InputContainer>
+        <Input tw="w-96" className="peer" type="text" name="discord" placeholder=" " required />
+        <Label htmlFor="discord">Discord</Label>
+      </InputContainer>
+      <SectionBtn onClick={ () => setVisible('Members') }>
+        Next
+        <Next />
+      </SectionBtn>
+    </>
+  );
+};
+
+const MembersFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
+  return(
+    <>
+      <h1 tw="mb-6 text-2xl text-gray-900">Members and Roles</h1>
+      <InputContainer className="group">
+        <Input tw="w-96" className="peer" type="text" name="member1" placeholder=" " required />
+        <Label htmlFor="member1">Name</Label>
+        <div tw="flex items-start mt-2">
+          <div tw="flex items-center h-5">
+            <AdminCheckBox id="admin" type="checkbox" value="" />
+          </div>
+          <AdminCheckLabel htmlFor="admin">Admin</AdminCheckLabel>
+        </div>
+      </InputContainer>
+      <InputContainer>
+        <Input tw="w-96" className="peer" type="text" name="member2" placeholder=" " required />
+        <Label htmlFor="member2">Name</Label>
+        <div tw="flex items-start mt-2">
+          <div tw="flex items-center h-5">
+            <AdminCheckBox id="admin" type="checkbox" value="" />
+          </div>
+          <AdminCheckLabel htmlFor="admin">Admin</AdminCheckLabel>
+        </div>
+      </InputContainer>
+      <InputContainer>
+        <Input tw="w-96" className="peer" type="text" name="member3" placeholder=" " required />
+        <Label htmlFor="member3">Name</Label>
+        <div tw="flex items-start mt-2">
+          <div tw="flex items-center h-5">
+            <AdminCheckBox id="admin" type="checkbox" value="" />
+          </div>
+          <AdminCheckLabel htmlFor="admin">Admin</AdminCheckLabel>
+        </div>
+      </InputContainer>
+      <SectionBtn onClick={ () => setVisible('Voting') }>
+        Next
+        <Next />
+      </SectionBtn>
+    </>
+  );
+};
+
+// NOTE not sure what actually should go here
+const VotingFormSection: FC = () => {
+  return(
+    <>
+      <h1 tw="mb-6 text-2xl text-gray-900">Voting Options</h1>
+      <InputContainer className="group">
+        <Input tw="w-96" className="peer" type="text" name="facebook" placeholder=" " required />
+        <Label htmlFor="facebook">Facebook Link</Label>
+      </InputContainer>
+      <InputContainer>
+        <Input tw="w-96" className="peer" type="text" name="insta" placeholder=" " required />
+        <Label htmlFor="insta">Instagram</Label>
+      </InputContainer>
+      <InputContainer>
+        <Input tw="w-96" className="peer" type="text" name="discord" placeholder=" " required />
+        <Label htmlFor="discord">Discord</Label>
+      </InputContainer>
+      <SectionBtn onClick={ (e) => e.preventDefault() }>
+        Submit
+        <Next />
+      </SectionBtn>
+    </>
+  );
+};
+
