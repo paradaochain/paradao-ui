@@ -77,6 +77,7 @@ const FormCard: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
+const FormHeader = tw.h1`mb-6 text-2xl text-gray-900`;
 const InputContainer = tw.div`relative z-0 w-full mb-6`;
 const Input = tw.input`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600`;
 const Label = tw.label`peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6`;
@@ -88,7 +89,7 @@ const AdminCheckLabel = tw.label`ml-2 text-sm font-medium text-gray-500`;
 const DaoInfoFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
   return(
     <>
-      <h1 tw="mb-6 text-2xl text-gray-900">Dao Name and description</h1>
+      <FormHeader>Dao Name and description</FormHeader>
       <InputContainer className="group">
         <Input tw="w-48" className="peer" type="text" name="dao_name" placeholder=" " required />
         <Label htmlFor="dao_name">Dao Name</Label>
@@ -98,7 +99,7 @@ const DaoInfoFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisi
         <Label htmlFor="token">Token Name</Label>
       </InputContainer>
       <InputContainer>
-        <TextArea id="descrip" rows={ 2 } tw="w-96" className="peer" name="descrip" placeholder={" "} required />
+        <TextArea id="descrip" rows={ 2 } maxLength={ 410 } tw="w-96" className="peer" name="descrip" placeholder={" "} required />
         <Label htmlFor="descrip">Description</Label>
       </InputContainer>
       <SectionBtn onClick={ () => setVisible('Links') }>
@@ -112,7 +113,7 @@ const DaoInfoFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisi
 const LinksFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
   return(
     <>
-      <h1 tw="mb-6 text-2xl text-gray-900">Add Social Media Links</h1>
+      <FormHeader>Add Social Media Links</FormHeader>
       <InputContainer className="group">
         <Input tw="w-96" className="peer" type="text" name="facebook" placeholder=" " required />
         <Label htmlFor="facebook">Facebook Link</Label>
@@ -136,7 +137,7 @@ const LinksFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisibl
 const MembersFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
   return(
     <>
-      <h1 tw="mb-6 text-2xl text-gray-900">Members and Roles</h1>
+      <FormHeader>Members and Roles</FormHeader>
       <InputContainer className="group">
         <Input tw="w-96" className="peer" type="text" name="member1" placeholder=" " required />
         <Label htmlFor="member1">Name</Label>
@@ -179,7 +180,7 @@ const MembersFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisi
 const VotingFormSection: FC = () => {
   return(
     <>
-      <h1 tw="mb-6 text-2xl text-gray-900">Voting Options</h1>
+      <FormHeader>Voting Options</FormHeader>
       <InputContainer className="group">
         <Input tw="w-96" className="peer" type="text" name="facebook" placeholder=" " required />
         <Label htmlFor="facebook">Facebook Link</Label>

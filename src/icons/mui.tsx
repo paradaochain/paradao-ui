@@ -8,6 +8,8 @@ const Icon = tw.svg`fill-current`;
 const BlueIcon = tw(Icon)`text-blue-900`;
 const FormIcon = tw(Icon)`w-5 h-5`;
 const NextIcon = tw(Icon)`ml-2 -mr-1 w-4 h-4`;
+const NextCrumbIcon = tw(Icon)`w-6 h-6 text-gray-400`;
+const HomeIcon = tw(Icon)`mr-2 w-4 h-4`;
 
 export const Add = () => (
   <BlueIcon xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
@@ -49,4 +51,18 @@ export const Next = () => (
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
   </NextIcon>
+);
+
+
+export const NextCrumb = () => (
+  <NextCrumbIcon xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+  </NextCrumbIcon>
+);
+
+export const Home = () => (
+  <HomeIcon xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+    <path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+  </HomeIcon>
 );
