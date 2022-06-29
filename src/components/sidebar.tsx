@@ -5,14 +5,14 @@ import logo from './paradao-icon.svg';
 import { View, Add } from '@icons/mui';
 
 const LogoButton = tw.button`w-full mb-4 flex justify-center items-center`;
-const SideBarBtn = tw.button`flex w-full items-center p-2 text-base font-normal rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`;
-const SideBarAside = tw.aside`w-64 bg-gray-50 h-screen`;
-const SideBarContainer = tw.div`overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-50`;
+const SideBarBtn = tw.button`flex w-full items-center p-2 text-base font-normal rounded-lg hover:bg-gray-100`;
+const SideBarAside = tw.aside`w-64 bg-gray-50 min-h-screen`;
+const SideBarContainer = tw.div`overflow-y-auto py-4 px-3 bg-gray-50 rounded`;
 const SideBarTxt = tw.span`ml-3 text-blue-900`;
 
 const LayoutSidebar: FC = () => {
   return (
-    <div tw="width[fit-content] h-screen">
+    <div tw="flex width[fit-content]">
       <Sidebar />
     </div>
   );

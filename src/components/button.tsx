@@ -3,10 +3,13 @@ import tw from 'twin.macro';
 
 const BaseButton = tw.button`inline-flex items-center py-2 px-3 text-sm font-medium text-center rounded-lg`;
 const CtaButton = tw(BaseButton)`text-white bg-purple-700 hover:bg-purple-800 focus:bg-purple-500`;
+const CtaLightButton = tw(BaseButton)`text-white bg-purple-500 hover:bg-purple-600 focus:bg-purple-300`;
 
 const Button: FC<ComponentProps<'button'>> = (props) => {
   if (props.disabled) {
     return <CtaButton tw="border-2 border-color[#EEEEEE] color[#B2B2B2] background[#F3F3F3] cursor-default" {...props} />;
+  } else if (props.color === 'light') {
+    return <CtaLightButton {...props} />;
   }
   return <CtaButton {...props} />;
 };
