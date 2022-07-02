@@ -23,7 +23,7 @@ const Breadcrumbs: FC = () => {
         {/* always will have home, the current page (last one in the array) is not a button, the rest should be buttons */}
         {crumbs.length > 0 &&
           crumbs.map((loc, i) => {
-            console.log('ummm', crumbs, location);
+            // console.log('ummm', crumbs, location);
             if (loc) {
               // if (i === crumbs.length - 1) {
               //   return (
@@ -36,7 +36,7 @@ const Breadcrumbs: FC = () => {
               //   );
               // } else {
               return (
-                <li>
+                <li key={ `${loc}-${i}` }>
                   <div tw="flex items-center">
                     <NextCrumb />
                     <BcBtn tw="ml-1 md:ml-2" onClick={() => setLocation(loc)}>

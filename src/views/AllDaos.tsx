@@ -1,7 +1,7 @@
 import React, { FC, PropsWithChildren, useState } from 'react';
 import { useLocation } from 'wouter';
 import tw from 'twin.macro';
-import Button from '@components/button';
+import Button from '@components/Button';
 // import { CircleComplete, CircleOutline, Next } from '@icons/mui';
 import { daoList } from '@views/fakeData';
 

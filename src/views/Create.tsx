@@ -1,7 +1,7 @@
 import React, { Component, FC, PropsWithChildren, useState } from 'react';
 import tw from 'twin.macro';
 import { CircleComplete, CircleOutline, Next } from '@icons/mui';
-import { CreateFormButton as SectionBtn } from '@components/button';
+import { CreateFormButton as SectionBtn } from '@components/Button';
 
 type Sections = 'DaoInfo' | 'Links' | 'Members' | 'Voting';
 

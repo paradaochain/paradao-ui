@@ -11,6 +11,8 @@ const NextIcon = tw(Icon)`ml-2 -mr-1 w-4 h-4`;
 const NextCrumbIcon = tw(Icon)`w-6 h-6 text-gray-400`;
 const HomeIcon = tw(Icon)`mr-2 w-4 h-4`;
 const NavBarIcon = tw(Icon)`w-6 h-6 text-gray-500`;
+const CloseIcon = tw(Icon)`w-6 h-6 `;
+const InfoIcon = tw(Icon)`mr-2 w-3 h-3`;
 
 export const Add = () => (
   <BlueIcon xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
@@ -77,4 +79,16 @@ export const MenuIcon = () => (
   <NavBarIcon xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
     <path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
   </NavBarIcon>
+);
+
+export const Close = () => (
+  <CloseIcon xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+    <path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+  </CloseIcon>
+);
+
+export const QuestionCircle = () => (
+  <InfoIcon xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000" aria-hidden="true" focusable="false" role="img">
+    <path d="M0 0h24v24H0z" fill="none"/><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+  </InfoIcon>
 );

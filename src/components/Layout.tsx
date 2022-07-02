@@ -1,10 +1,11 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren, useState } from 'react';
 import tw from 'twin.macro';
 import { useLocation } from 'wouter';
 import logo from './paradao-icon.svg';
-import Sidebar from '@components/sidebar';
-import Breadcrumbs from '@components/breadcrumbs';
-import Button from '@components/button';
+import Sidebar from '@components/Sidebar';
+import Breadcrumbs from '@components/Breadcrumbs';
+import Button from '@components/Button';
+import WalletModal from '@components/WalletModal';
 import { useMobile } from '@utils/responsive';
 import { SearchIcon, MenuIcon, WalletIcon } from '@icons/mui';
 
@@ -13,6 +14,7 @@ const ContentContainer = tw.div`p-6 flex flex-col flex-1 justify-start items-sta
 
 const Layout: React.FC<PropsWithChildren> = ({ children: Component }) => {
   const isMobile = useMobile();
+  const [ showWalletModal, setShowWalletModal ] = useState<boolean>(false);
 
   return (
     <ScreenContainer>
@@ -20,10 +22,13 @@ const Layout: React.FC<PropsWithChildren> = ({ children: Component }) => {
         {/* TODO  mobile menu */}
         {!isMobile && <Sidebar />}
         <div tw="flex flex-1 flex-col">
-          <Header />
+          <Header showModal={ () => setShowWalletModal(true) } />
           <ContentContainer>
             <Breadcrumbs />
-            <div>{Component}</div>
+            <div>
+              { Component }
+              <WalletModal isOpened={ showWalletModal } onClose={ () => setShowWalletModal(false) } />
+            </div>
           </ContentContainer>
         </div>
       </div>
@@ -54,7 +59,7 @@ const MobileMenuBtn =       tw.button`md:hidden text-gray-500 hover:bg-gray-100 
 const MobileBtn = tw.button`md:hidden text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-gray-200 rounded-lg focus:ring-4 text-sm p-2.5 mr-1`;
 const NavContentContainer = tw.div`hidden md:flex md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium`;
 
-const Header: FC = () => {
+const Header: FC<{ showModal: () => void }> = ({ showModal }) => {
   return (
       <nav tw="flex bg-gray-200 h-16 px-2 sm:px-4 py-2.5">
         <div tw="container flex flex-wrap justify-between items-center mx-auto">
@@ -78,7 +83,7 @@ const Header: FC = () => {
           </div>
           <div tw="hidden justify-between items-center w-full md:flex md:w-auto md:order-1">
             <NavContentContainer>
-              <Button color="light" onClick={() => null}>Connect Wallet</Button>
+              <Button color="light" onClick={ showModal }>Connect Wallet</Button>
             </NavContentContainer>
           </div>
         </div>
