@@ -4,11 +4,6 @@ import styled from "styled-components";
 import { Close as CloseIcon, QuestionCircle } from '@icons/mui';
 import { MetaMask, Coinbase, Opera, WalletConnect, Fortmatic } from '@icons/wallet';
 
-type WalletProps = {
-    isOpened: boolean;
-    onClose: () => void;
-  };
-
 const WalletModal: FC<{ isOpened: boolean, onClose: () => void }> = ({ isOpened, onClose }) => {
     const ref = useRef<HTMLDialogElement>(null);
 
