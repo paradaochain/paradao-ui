@@ -11,26 +11,27 @@ import Button, { CreateFormButton as SectionBtn } from '@components/Button';
 type Sections = 'DaoInfo' | 'Links' | 'Members' | 'Voting';
 
 // need to manually upload the dao.wasm file once onto the chain
-// const daoCodeStoredHash = '0xdf80ef2242ae49f22c76ccb386588fd11a7d845817b772a0f8f3a99a071095be';
+// const daoCodeStoredHash = '0x2bfb721b97ce9267284eb025eec20545de25da43be88b28b9f7e45d098448b58';
 
 // for now also need to manually upload/deploy 'factory.contract' -- and save the hash here  -- should we code this??
-// NOTE UPDATE THIS WITH THE HASH FROM YOUR LOCAL CHAIN
-const factoryCodeStoredHash = '0xe0264b7255a7766423dce3c62b28a832096fd40d9bb1c157165687abd69722fb';
+// NOTE UPDATE THIS WITH THE ID FROM YOUR LOCAL CHAIN
+const factoryCodeStoredAccount = '5Fxj4rishzAD767k7NgMKDzRz6BipekLmbq2Ufu4W3mp61kN';
 
 export const createDao = async (injAddr: string) => {
   const api = await ApiPromise.create();
   const injector = await web3FromAddress(injAddr);
-  const contract = new ContractPromise(api, factoryAbi, factoryCodeStoredHash);
+  const contract = new ContractPromise(api, factoryAbi, factoryCodeStoredAccount);
 
   const gasLimit = 100000n * 1000000n;
   const storageDepositLimit = null;
-  const name = 'testdao5';
+  const name = 'gilsons';
   const ty = 0;
+  const fee = 10;
   const salt = 0;
   const stars = null;
 
   await contract.tx
-    .createDao({ storageDepositLimit, gasLimit }, name, ty, stars, salt)
+    .createDao({ storageDepositLimit, gasLimit }, name, ty, stars, salt, fee)
     .signAndSend(injAddr, { signer: injector.signer }, result => {
       if (result.status.isInBlock) {
         console.log(`${ name } in a block`);

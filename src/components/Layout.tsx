@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useState, useContext } from 'react';
+import React, { FC, PropsWithChildren, useState } from 'react';
 import tw from 'twin.macro';
 import { useLocation } from 'wouter';
 import logo from './paradao-icon.svg';
@@ -46,7 +46,7 @@ export default Layout;
 const LogoButton = tw.button`flex justify-center items-center md:hidden hover:bg-gray-100 rounded-lg`;
 
 const Logo: FC = () => {
-  const [location, setLocation] = useLocation();
+  const [ location, setLocation ] = useLocation();
   return (
     <LogoButton onClick={() => setLocation('/')}>
       <div tw="h-12 w-12">
