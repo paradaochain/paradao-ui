@@ -1,15 +1,53 @@
-import React, { Component, FC, PropsWithChildren, useState } from 'react';
+import React, { FC, PropsWithChildren, useState, useContext } from 'react';
 import tw from 'twin.macro';
+import { ApiPromise } from '@polkadot/api';
+import { ContractPromise, } from '@polkadot/api-contract';
+import { web3FromAddress } from '@polkadot/extension-dapp';
+import { AccountContext, AccoutContextType } from '@context/wallet';
+import factoryAbi from '@abis/factoryMeta.json';
 import { CircleComplete, CircleOutline, Next } from '@icons/mui';
-import { CreateFormButton as SectionBtn } from '@components/Button';
+import Button, { CreateFormButton as SectionBtn } from '@components/Button';
 
 type Sections = 'DaoInfo' | 'Links' | 'Members' | 'Voting';
 
+// need to manually upload the dao.wasm file once onto the chain
+// const daoCodeStoredHash = '0xdf80ef2242ae49f22c76ccb386588fd11a7d845817b772a0f8f3a99a071095be';
+
+// for now also need to manually upload/deploy 'factory.contract' -- and save the hash here  -- should we code this??
+// NOTE UPDATE THIS WITH THE HASH FROM YOUR LOCAL CHAIN
+const factoryCodeStoredHash = '0xe0264b7255a7766423dce3c62b28a832096fd40d9bb1c157165687abd69722fb';
+
+export const createDao = async (injAddr: string) => {
+  const api = await ApiPromise.create();
+  const injector = await web3FromAddress(injAddr);
+  const contract = new ContractPromise(api, factoryAbi, factoryCodeStoredHash);
+
+  const gasLimit = 100000n * 1000000n;
+  const storageDepositLimit = null;
+  const name = 'testdao5';
+  const ty = 0;
+  const salt = 0;
+  const stars = null;
+
+  await contract.tx
+    .createDao({ storageDepositLimit, gasLimit }, name, ty, stars, salt)
+    .signAndSend(injAddr, { signer: injector.signer }, result => {
+      if (result.status.isInBlock) {
+        console.log(`${ name } in a block`);
+      } else if (result.status.isFinalized) {
+        console.log(`${ name } finalized`);
+      }
+    });
+};
+
 const Create: React.FC = () => {
   const [visibleSection, setVisibleSection] = useState<Sections>('DaoInfo');
+  const { account } = useContext(AccountContext) as AccoutContextType;
+
   return (
     <div tw="ml-4 my-8 space-y-8 flex flex-col justify-center items-start">
-      <h1 tw="ml-2 text-2xl text-blue-800">Create New DAO</h1>
+      <h1 tw="ml-2 text-2xl text-blue-800">Lets fucking do this</h1>
+      <Button onClick={ () => createDao(account.address) }>Test Create</Button>
       <div tw="space-x-12 flex flex-row justify-center items-start">
         <FormSteps setVisible={setVisibleSection} />
         <DaoForm setVisible={setVisibleSection} visibleSection={visibleSection} />

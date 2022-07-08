@@ -1,0 +1,258 @@
+{
+    "source": {
+      "hash": "0xe0264b7255a7766423dce3c62b28a832096fd40d9bb1c157165687abd69722fb",
+      "language": "ink! 3.3.0",
+      "compiler": "rustc 1.64.0-nightly"
+    },
+    "contract": {
+      "name": "factory",
+      "version": "0.1.0",
+      "authors": [
+        "[your_name] <[your_email]>"
+      ]
+    },
+    "V3": {
+      "spec": {
+        "constructors": [
+          {
+            "args": [
+              {
+                "label": "next_index",
+                "type": {
+                  "displayName": [
+                    "u32"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "dao_contract_hash",
+                "type": {
+                  "displayName": [
+                    "Hash"
+                  ],
+                  "type": 1
+                }
+              }
+            ],
+            "docs": [],
+            "label": "new",
+            "payable": false,
+            "selector": "0x9bae9d5e"
+          }
+        ],
+        "docs": [],
+        "events": [],
+        "messages": [
+          {
+            "args": [
+              {
+                "label": "name",
+                "type": {
+                  "displayName": [
+                    "String"
+                  ],
+                  "type": 4
+                }
+              },
+              {
+                "label": "ty",
+                "type": {
+                  "displayName": [
+                    "u32"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "stars",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "salt",
+                "type": {
+                  "displayName": [
+                    "u32"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Creates a new dao"
+            ],
+            "label": "create_dao",
+            "mutates": true,
+            "payable": false,
+            "returnType": null,
+            "selector": "0x0574fc7e"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Simply returns the current value of our `bool`."
+            ],
+            "label": "get_next_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 0
+            },
+            "selector": "0x0f15b67c"
+          }
+        ]
+      },
+      "storage": {
+        "struct": {
+          "fields": [
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 0
+                }
+              },
+              "name": "next_index"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 1
+                }
+              },
+              "name": "dao_contract_hash"
+            }
+          ]
+        }
+      },
+      "types": [
+        {
+          "id": 0,
+          "type": {
+            "def": {
+              "primitive": "u32"
+            }
+          }
+        },
+        {
+          "id": 1,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "type": 2,
+                    "typeName": "[u8; 32]"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "ink_env",
+              "types",
+              "Hash"
+            ]
+          }
+        },
+        {
+          "id": 2,
+          "type": {
+            "def": {
+              "array": {
+                "len": 32,
+                "type": 3
+              }
+            }
+          }
+        },
+        {
+          "id": 3,
+          "type": {
+            "def": {
+              "primitive": "u8"
+            }
+          }
+        },
+        {
+          "id": 4,
+          "type": {
+            "def": {
+              "primitive": "str"
+            }
+          }
+        },
+        {
+          "id": 5,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "None"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 6
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Some"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 6
+              }
+            ],
+            "path": [
+              "Option"
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 7
+              }
+            }
+          }
+        },
+        {
+          "id": 7,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "type": 2,
+                    "typeName": "[u8; 32]"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "ink_env",
+              "types",
+              "AccountId"
+            ]
+          }
+        }
+      ]
+    }
+  }

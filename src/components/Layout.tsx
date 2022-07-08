@@ -1,7 +1,8 @@
-import React, { FC, PropsWithChildren, useState } from 'react';
+import React, { FC, PropsWithChildren, useState, useContext } from 'react';
 import tw from 'twin.macro';
 import { useLocation } from 'wouter';
 import logo from './paradao-icon.svg';
+import { AccountProvider } from '@context/wallet';
 import Sidebar from '@components/Sidebar';
 import Breadcrumbs from '@components/Breadcrumbs';
 import Button from '@components/Button';
@@ -12,28 +13,31 @@ import { SearchIcon, MenuIcon, WalletIcon } from '@icons/mui';
 const ScreenContainer = tw.main`h-screen flex flex-col`;
 const ContentContainer = tw.div`p-6 flex flex-col flex-1 justify-start items-start bg-blue-50 overflow-y-auto`;
 
-const Layout: React.FC<PropsWithChildren> = ({ children: Component }) => {
+const Layout: FC<PropsWithChildren> = ({ children: Component }) => {
   const isMobile = useMobile();
   const [ showWalletModal, setShowWalletModal ] = useState<boolean>(false);
 
   return (
-    <ScreenContainer>
-      <div tw="flex flex-1 overflow-hidden">
-        {/* TODO  mobile menu */}
-        {!isMobile && <Sidebar />}
-        <div tw="flex flex-1 flex-col">
-          <Header showModal={ () => setShowWalletModal(true) } />
-          <ContentContainer>
-            <Breadcrumbs />
-            <div>
-              { Component }
-              <WalletModal isOpened={ showWalletModal } onClose={ () => setShowWalletModal(false) } />
-            </div>
-          </ContentContainer>
+    <AccountProvider>
+      <ScreenContainer>
+        <div tw="flex flex-1 overflow-hidden">
+          {/* TODO  mobile menu */}
+          {!isMobile && <Sidebar />}
+          <div tw="flex flex-1 flex-col">
+            <Header showModal={ () => setShowWalletModal(true) } />
+            <ContentContainer>
+              <Breadcrumbs />
+              <div>
+                { Component }
+                <WalletModal isOpened={ showWalletModal } onClose={ () => setShowWalletModal(false) } />
+              </div>
+            </ContentContainer>
+          </div>
         </div>
-      </div>
-      {/* <div tw="flex">Footer</div> */}
-    </ScreenContainer>
+        {/* <div tw="flex">Footer</div> */}
+      </ScreenContainer>
+    </AccountProvider>
+
   );
 };
 

@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@polkadot/api": "^8.11.3",
+    "@polkadot/api-contract": "^8.11.3",
+    "@polkadot/extension-dapp": "^0.44.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-responsive": "^9.0.0-beta.10",

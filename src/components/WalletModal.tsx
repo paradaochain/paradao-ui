@@ -1,17 +1,36 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useContext, useEffect, useRef } from 'react';
 import tw from 'twin.macro';
 import styled from "styled-components";
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
+import { AccountContext, AccoutContextType, AccountType } from '@context/wallet';
 import { Close as CloseIcon, QuestionCircle } from '@icons/mui';
 import { MetaMask, Coinbase, Opera, WalletConnect, Fortmatic } from '@icons/wallet';
 
+const getWalletAccounts = async (): Promise<AccountType | null> => {
+  const extensions = await web3Enable('Para Dao');
+  if (extensions.length === 0) {
+      // no extension installed, or the user did not accept the authorization
+      // in this case we should inform the use and give a link to the extension
+      return null;
+  }
+
+  // returns an array of { address, meta: { name, source } }
+  const allAccounts = await web3Accounts();
+  allAccounts.forEach(act => {
+    console.log('Name: ', act.meta.name);
+    console.log('addr: ', act.address);
+  });
+
+  // TODO display the options in the modal, and allow user to choose which account to use
+  const name = allAccounts[0].meta.name ? allAccounts[0].meta.name : '';
+  const address = allAccounts[0].address;
+
+  return { name, address };
+};
+
 const WalletModal: FC<{ isOpened: boolean, onClose: () => void }> = ({ isOpened, onClose }) => {
     const ref = useRef<HTMLDialogElement>(null);
-
-    const Container = styled.dialog`
-        ::backdrop {
-            background: rgba(0, 0, 0, 0.6);
-        }
-    `;
+    const { useSetAccount } = useContext(AccountContext) as AccoutContextType;
 
     useEffect(() => {
         if (isOpened) {
@@ -19,14 +38,32 @@ const WalletModal: FC<{ isOpened: boolean, onClose: () => void }> = ({ isOpened,
         } else {
             ref.current?.close();
         }
-    }, [isOpened]);
+    }, [ isOpened ]);
+
+    useEffect(() => {
+      const getData = async () => {
+        const acts = await getWalletAccounts();
+        if (acts !== null) {
+          useSetAccount(acts);
+        }
+      };
+      getData();
+    }, [ useSetAccount ]);
+
+    const Container = styled.dialog`
+        ::backdrop {
+            background: rgba(0, 0, 0, 0.6);
+        }
+    `;
 
     return (
-        <Container ref={ ref } onCancel={ onClose } onClick={ onClose } >
-            <Wallet hideModal={ onClose } />
-        </Container>
+      <Container ref={ ref } onCancel={ onClose } onClick={ onClose } >
+          <Wallet hideModal={ onClose } />
+      </Container>
     );
 };
+
+export default WalletModal;
 
 const ModalDiv = tw.div`relative overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:mx-auto md:inset-0 md:h-full`;
 const ModalContainer = tw.div`relative p-4 w-full max-w-md h-full md:h-auto fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2`;
@@ -40,6 +77,7 @@ const InfoSection = tw.div`inline-flex items-center text-xs font-normal text-gra
 
 const Wallet: FC<{ hideModal: () => void }> = ({ hideModal }) => {
   const preventAutoClose = (e: React.MouseEvent) => e.stopPropagation();
+
   return (
     <ModalDiv tabIndex={ -1 } aria-hidden="true">
       <ModalContainer onClick={ preventAutoClose }>
@@ -92,5 +130,3 @@ const Wallet: FC<{ hideModal: () => void }> = ({ hideModal }) => {
     </ModalDiv>
   );
 };
-
-export default WalletModal;
