@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0x6979786237bdf840ebef1a3a993800973544bfd198b730b85d104d32b14e30bd",
+    "hash": "0xf6bfb0cc2d653f6e16448411bdf0727194546dc945625d6efa8b8a99e0a76276",
     "language": "ink! 3.3.0",
     "compiler": "rustc 1.64.0-nightly"
   },
@@ -56,6 +56,15 @@
               }
             },
             {
+              "label": "metadata_url",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 6
+              }
+            },
+            {
               "label": "ty",
               "type": {
                 "displayName": [
@@ -65,7 +74,7 @@
               }
             },
             {
-              "label": "fee",
+              "label": "joining_fee",
               "type": {
                 "displayName": [
                   "Balance"
@@ -74,10 +83,10 @@
               }
             },
             {
-              "label": "stars",
+              "label": "init_members",
               "type": {
                 "displayName": [
-                  "Option"
+                  "Vec"
                 ],
                 "type": 8
               }
@@ -266,32 +275,49 @@
         "id": 8,
         "type": {
           "def": {
+            "sequence": {
+              "type": 9
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "type": {
+          "def": {
+            "tuple": [
+              5,
+              6,
+              10
+            ]
+          }
+        }
+      },
+      {
+        "id": 10,
+        "type": {
+          "def": {
             "variant": {
               "variants": [
                 {
                   "index": 0,
-                  "name": "None"
+                  "name": "Star"
                 },
                 {
-                  "fields": [
-                    {
-                      "type": 4
-                    }
-                  ],
                   "index": 1,
-                  "name": "Some"
+                  "name": "Collab"
+                },
+                {
+                  "index": 2,
+                  "name": "Member"
                 }
               ]
             }
           },
-          "params": [
-            {
-              "name": "T",
-              "type": 4
-            }
-          ],
           "path": [
-            "Option"
+            "dao",
+            "dao",
+            "Role"
           ]
         }
       }

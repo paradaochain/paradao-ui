@@ -1,0 +1,1307 @@
+{
+  "source": {
+    "hash": "0xd32e9c306d4dbf5213a0ee963b2dcf94074c26f65e66d8136e3ad7b713faa6d0",
+    "language": "ink! 3.3.0",
+    "compiler": "rustc 1.64.0-nightly"
+  },
+  "contract": {
+    "name": "dao",
+    "version": "0.1.0",
+    "authors": [
+      "[your_name] <[your_email]>"
+    ]
+  },
+  "V3": {
+    "spec": {
+      "constructors": [
+        {
+          "args": [
+            {
+              "label": "name",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "metadata_url",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "ty",
+              "type": {
+                "displayName": [
+                  "DaoType"
+                ],
+                "type": 24
+              }
+            },
+            {
+              "label": "joining_fee",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 1
+              }
+            },
+            {
+              "label": "init_members",
+              "type": {
+                "displayName": [
+                  "Option"
+                ],
+                "type": 25
+              }
+            }
+          ],
+          "docs": [],
+          "label": "new",
+          "payable": false,
+          "selector": "0x9bae9d5e"
+        }
+      ],
+      "docs": [],
+      "events": [
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Joined"
+        }
+      ],
+      "messages": [
+        {
+          "args": [],
+          "docs": [
+            " Returns some useful info for the DAO"
+          ],
+          "label": "info",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Info"
+            ],
+            "type": 28
+          },
+          "selector": "0x0190e5ac"
+        },
+        {
+          "args": [
+            {
+              "label": "member",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            }
+          ],
+          "docs": [
+            " Return stars"
+          ],
+          "label": "role_of",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Option"
+            ],
+            "type": 29
+          },
+          "selector": "0x55ceac53"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Return total number of members"
+          ],
+          "label": "total_members",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "u32"
+            ],
+            "type": 9
+          },
+          "selector": "0xc23f95c5"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Return total proposals"
+          ],
+          "label": "total_proposals",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "u32"
+            ],
+            "type": 9
+          },
+          "selector": "0x4e8d8fac"
+        },
+        {
+          "args": [
+            {
+              "label": "proposal_id",
+              "type": {
+                "displayName": [
+                  "ProposalId"
+                ],
+                "type": 9
+              }
+            }
+          ],
+          "docs": [
+            " Returns proposal info"
+          ],
+          "label": "proposal_info",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Option"
+            ],
+            "type": 30
+          },
+          "selector": "0xb70a2fc6"
+        },
+        {
+          "args": [
+            {
+              "label": "proposal_id",
+              "type": {
+                "displayName": [
+                  "ProposalId"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            }
+          ],
+          "docs": [
+            " Returns user vote status for the proposal"
+          ],
+          "label": "vote_of",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Option"
+            ],
+            "type": 31
+          },
+          "selector": "0xa992d8c2"
+        },
+        {
+          "args": [
+            {
+              "label": "did",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Joing a DAO as a member"
+          ],
+          "label": "join",
+          "mutates": true,
+          "payable": true,
+          "returnType": {
+            "displayName": [
+              "Result"
+            ],
+            "type": 32
+          },
+          "selector": "0x2c254e82"
+        },
+        {
+          "args": [
+            {
+              "label": "proposal_type",
+              "type": {
+                "displayName": [
+                  "ProposalType"
+                ],
+                "type": 12
+              }
+            },
+            {
+              "label": "title",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "metadata_url",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [],
+          "label": "propose",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Result"
+            ],
+            "type": 35
+          },
+          "selector": "0xcb14b5b5"
+        },
+        {
+          "args": [
+            {
+              "label": "proposal_id",
+              "type": {
+                "displayName": [
+                  "ProposalId"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "label": "vote",
+              "type": {
+                "displayName": [
+                  "bool"
+                ],
+                "type": 23
+              }
+            }
+          ],
+          "docs": [],
+          "label": "vote",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Result"
+            ],
+            "type": 32
+          },
+          "selector": "0x083be260"
+        },
+        {
+          "args": [
+            {
+              "label": "proposal_id",
+              "type": {
+                "displayName": [
+                  "ProposalId"
+                ],
+                "type": 9
+              }
+            }
+          ],
+          "docs": [],
+          "label": "execute",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Result"
+            ],
+            "type": 32
+          },
+          "selector": "0xd00ec894"
+        }
+      ]
+    },
+    "storage": {
+      "struct": {
+        "fields": [
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "ty": 0
+              }
+            },
+            "name": "name"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                "ty": 0
+              }
+            },
+            "name": "metadata_url"
+          },
+          {
+            "layout": {
+              "enum": {
+                "dispatchKey": "0x0200000000000000000000000000000000000000000000000000000000000000",
+                "variants": {
+                  "0": {
+                    "fields": []
+                  },
+                  "1": {
+                    "fields": []
+                  }
+                }
+              }
+            },
+            "name": "ty"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
+                "ty": 1
+              }
+            },
+            "name": "fee"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+                "ty": 2
+              }
+            },
+            "name": "members"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
+                "ty": 9
+              }
+            },
+            "name": "member_count"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
+                "ty": 10
+              }
+            },
+            "name": "proposals"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0700000000000000000000000000000000000000000000000000000000000000",
+                "ty": 9
+              }
+            },
+            "name": "next_proposal_id"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
+                "ty": 21
+              }
+            },
+            "name": "votes"
+          }
+        ]
+      }
+    },
+    "types": [
+      {
+        "id": 0,
+        "type": {
+          "def": {
+            "primitive": "str"
+          }
+        }
+      },
+      {
+        "id": 1,
+        "type": {
+          "def": {
+            "primitive": "u128"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "offset_key",
+                  "type": 8,
+                  "typeName": "Key"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "K",
+              "type": 3
+            },
+            {
+              "name": "V",
+              "type": 6
+            }
+          ],
+          "path": [
+            "ink_storage",
+            "lazy",
+            "mapping",
+            "Mapping"
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "type": 4,
+                  "typeName": "[u8; 32]"
+                }
+              ]
+            }
+          },
+          "path": [
+            "ink_env",
+            "types",
+            "AccountId"
+          ]
+        }
+      },
+      {
+        "id": 4,
+        "type": {
+          "def": {
+            "array": {
+              "len": 32,
+              "type": 5
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "type": {
+          "def": {
+            "primitive": "u8"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "type": {
+          "def": {
+            "tuple": [
+              0,
+              7
+            ]
+          }
+        }
+      },
+      {
+        "id": 7,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "Star"
+                },
+                {
+                  "index": 1,
+                  "name": "Collab"
+                },
+                {
+                  "index": 2,
+                  "name": "Member"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "Role"
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "type": 4,
+                  "typeName": "[u8; 32]"
+                }
+              ]
+            }
+          },
+          "path": [
+            "ink_primitives",
+            "Key"
+          ]
+        }
+      },
+      {
+        "id": 9,
+        "type": {
+          "def": {
+            "primitive": "u32"
+          }
+        }
+      },
+      {
+        "id": 10,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "offset_key",
+                  "type": 8,
+                  "typeName": "Key"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "K",
+              "type": 9
+            },
+            {
+              "name": "V",
+              "type": 11
+            }
+          ],
+          "path": [
+            "ink_storage",
+            "lazy",
+            "mapping",
+            "Mapping"
+          ]
+        }
+      },
+      {
+        "id": 11,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "title",
+                  "type": 0,
+                  "typeName": "String"
+                },
+                {
+                  "name": "metadata_url",
+                  "type": 0,
+                  "typeName": "String"
+                },
+                {
+                  "name": "proposer",
+                  "type": 3,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "expires",
+                  "type": 9,
+                  "typeName": "BlockNumber"
+                },
+                {
+                  "name": "tx",
+                  "type": 12,
+                  "typeName": "ProposalType"
+                },
+                {
+                  "name": "status",
+                  "type": 19,
+                  "typeName": "ProposalStatus"
+                },
+                {
+                  "name": "threshold",
+                  "type": 9,
+                  "typeName": "u32"
+                },
+                {
+                  "name": "votes",
+                  "type": 20,
+                  "typeName": "Votes"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "Proposal"
+          ]
+        }
+      },
+      {
+        "id": 12,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 3,
+                      "typeName": "AccountId"
+                    },
+                    {
+                      "type": 1,
+                      "typeName": "Balance"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Treasury"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 13,
+                      "typeName": "Vec<AccountId>"
+                    },
+                    {
+                      "type": 14,
+                      "typeName": "Vec<(String, Role)>"
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Membership"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 15,
+                      "typeName": "Transaction"
+                    }
+                  ],
+                  "index": 2,
+                  "name": "Proxy"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "ProposalType"
+          ]
+        }
+      },
+      {
+        "id": 13,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 3
+            }
+          }
+        }
+      },
+      {
+        "id": 14,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 6
+            }
+          }
+        }
+      },
+      {
+        "id": 15,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "callee",
+                  "type": 3,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "selector",
+                  "type": 16,
+                  "typeName": "[u8; 4]"
+                },
+                {
+                  "name": "input",
+                  "type": 17,
+                  "typeName": "Vec<u8>"
+                },
+                {
+                  "name": "transferred_value",
+                  "type": 1,
+                  "typeName": "Balance"
+                },
+                {
+                  "name": "gas_limit",
+                  "type": 18,
+                  "typeName": "u64"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "Transaction"
+          ]
+        }
+      },
+      {
+        "id": 16,
+        "type": {
+          "def": {
+            "array": {
+              "len": 4,
+              "type": 5
+            }
+          }
+        }
+      },
+      {
+        "id": 17,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 5
+            }
+          }
+        }
+      },
+      {
+        "id": 18,
+        "type": {
+          "def": {
+            "primitive": "u64"
+          }
+        }
+      },
+      {
+        "id": 19,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "Voting"
+                },
+                {
+                  "index": 1,
+                  "name": "Expired"
+                },
+                {
+                  "index": 2,
+                  "name": "Rejected"
+                },
+                {
+                  "index": 3,
+                  "name": "Passed"
+                },
+                {
+                  "index": 4,
+                  "name": "Executed"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "ProposalStatus"
+          ]
+        }
+      },
+      {
+        "id": 20,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "yes",
+                  "type": 9,
+                  "typeName": "u32"
+                },
+                {
+                  "name": "no",
+                  "type": 9,
+                  "typeName": "u32"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "Votes"
+          ]
+        }
+      },
+      {
+        "id": 21,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "offset_key",
+                  "type": 8,
+                  "typeName": "Key"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "K",
+              "type": 22
+            },
+            {
+              "name": "V",
+              "type": 23
+            }
+          ],
+          "path": [
+            "ink_storage",
+            "lazy",
+            "mapping",
+            "Mapping"
+          ]
+        }
+      },
+      {
+        "id": 22,
+        "type": {
+          "def": {
+            "tuple": [
+              9,
+              3
+            ]
+          }
+        }
+      },
+      {
+        "id": 23,
+        "type": {
+          "def": {
+            "primitive": "bool"
+          }
+        }
+      },
+      {
+        "id": 24,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "Fanclub"
+                },
+                {
+                  "index": 1,
+                  "name": "Collab"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "DaoType"
+          ]
+        }
+      },
+      {
+        "id": 25,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 26
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 26
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 26,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 27
+            }
+          }
+        }
+      },
+      {
+        "id": 27,
+        "type": {
+          "def": {
+            "tuple": [
+              3,
+              0,
+              7
+            ]
+          }
+        }
+      },
+      {
+        "id": 28,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "name",
+                  "type": 0,
+                  "typeName": "String"
+                },
+                {
+                  "name": "ty",
+                  "type": 24,
+                  "typeName": "DaoType"
+                },
+                {
+                  "name": "fee",
+                  "type": 1,
+                  "typeName": "Balance"
+                },
+                {
+                  "name": "metadata_url",
+                  "type": 0,
+                  "typeName": "String"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "Info"
+          ]
+        }
+      },
+      {
+        "id": 29,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 7
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 7
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 30,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 31,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 23
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 23
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 32,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 33
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 34
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 33
+            },
+            {
+              "name": "E",
+              "type": 34
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 33,
+        "type": {
+          "def": {
+            "tuple": []
+          }
+        }
+      },
+      {
+        "id": 34,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "AlreadyAMember"
+                },
+                {
+                  "index": 1,
+                  "name": "NotEnoughMembers"
+                },
+                {
+                  "index": 2,
+                  "name": "ThresholdError"
+                },
+                {
+                  "index": 3,
+                  "name": "Overflow"
+                },
+                {
+                  "index": 4,
+                  "name": "Expired"
+                },
+                {
+                  "index": 5,
+                  "name": "NotFound"
+                },
+                {
+                  "index": 6,
+                  "name": "NotExecutable"
+                },
+                {
+                  "index": 7,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "index": 8,
+                  "name": "NotSupportedTx"
+                }
+              ]
+            }
+          },
+          "path": [
+            "dao",
+            "dao",
+            "Error"
+          ]
+        }
+      },
+      {
+        "id": 35,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 9
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 34
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 9
+            },
+            {
+              "name": "E",
+              "type": 34
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      }
+    ]
+  }
+}

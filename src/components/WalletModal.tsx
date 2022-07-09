@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useRef } from 'react';
 import tw from 'twin.macro';
-import styled from "styled-components";
+import styled from 'styled-components';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { AccountContext, AccoutContextType, AccountType } from '@context/wallet';
 import { Close as CloseIcon, QuestionCircle } from '@icons/mui';
@@ -9,14 +9,14 @@ import { MetaMask, Coinbase, Opera, WalletConnect, Fortmatic } from '@icons/wall
 const getWalletAccounts = async (): Promise<AccountType | null> => {
   const extensions = await web3Enable('Para Dao');
   if (extensions.length === 0) {
-      // no extension installed, or the user did not accept the authorization
-      // in this case we should inform the use and give a link to the extension
-      return null;
+    // no extension installed, or the user did not accept the authorization
+    // in this case we should inform the use and give a link to the extension
+    return null;
   }
 
   // returns an array of { address, meta: { name, source } }
   const allAccounts = await web3Accounts();
-  allAccounts.forEach(act => {
+  allAccounts.forEach((act) => {
     console.log('Name: ', act.meta.name);
     console.log('addr: ', act.address);
   });
@@ -28,39 +28,39 @@ const getWalletAccounts = async (): Promise<AccountType | null> => {
   return { name, address };
 };
 
-const WalletModal: FC<{ isOpened: boolean, onClose: () => void }> = ({ isOpened, onClose }) => {
-    const ref = useRef<HTMLDialogElement>(null);
-    const { useSetAccount } = useContext(AccountContext) as AccoutContextType;
+const WalletModal: FC<{ isOpened: boolean; onClose: () => void }> = ({ isOpened, onClose }) => {
+  const ref = useRef<HTMLDialogElement>(null);
+  const { useSetAccount } = useContext(AccountContext) as AccoutContextType;
 
-    useEffect(() => {
-        if (isOpened) {
-            ref.current?.showModal();
-        } else {
-            ref.current?.close();
-        }
-    }, [ isOpened ]);
+  useEffect(() => {
+    if (isOpened) {
+      ref.current?.showModal();
+    } else {
+      ref.current?.close();
+    }
+  }, [isOpened]);
 
-    useEffect(() => {
-      const getData = async () => {
-        const acts = await getWalletAccounts();
-        if (acts !== null) {
-          useSetAccount(acts);
-        }
-      };
-      getData();
-    }, [ useSetAccount ]);
+  useEffect(() => {
+    const getData = async () => {
+      const acts = await getWalletAccounts();
+      if (acts !== null) {
+        useSetAccount(acts);
+      }
+    };
+    // getData();
+  }, [useSetAccount]);
 
-    const Container = styled.dialog`
-        ::backdrop {
-            background: rgba(0, 0, 0, 0.6);
-        }
-    `;
+  const Container = styled.dialog`
+    ::backdrop {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  `;
 
-    return (
-      <Container ref={ ref } onCancel={ onClose } onClick={ onClose } >
-          <Wallet hideModal={ onClose } />
-      </Container>
-    );
+  return (
+    <Container ref={ref} onCancel={onClose} onClick={onClose}>
+      <Wallet hideModal={onClose} />
+    </Container>
+  );
 };
 
 export default WalletModal;
@@ -79,51 +79,53 @@ const Wallet: FC<{ hideModal: () => void }> = ({ hideModal }) => {
   const preventAutoClose = (e: React.MouseEvent) => e.stopPropagation();
 
   return (
-    <ModalDiv tabIndex={ -1 } aria-hidden="true">
-      <ModalContainer onClick={ preventAutoClose }>
+    <ModalDiv tabIndex={-1} aria-hidden="true">
+      <ModalContainer onClick={preventAutoClose}>
         <div tw="relative bg-white rounded-lg shadow">
-          <CloseButton onClick={ hideModal }><CloseIcon /></CloseButton>
+          <CloseButton onClick={hideModal}>
+            <CloseIcon />
+          </CloseButton>
           <ModalHeaderDiv>
             <ModalHeader>Connect wallet</ModalHeader>
           </ModalHeaderDiv>
           <div tw="p-6">
-              <HelperText>Connect with one of our available wallet providers or create a new one.</HelperText>
-              <ul tw="my-4 space-y-3">
-                <li>
-                  <WalletButton className="group" >
-                    <MetaMask />
-                    <WalletText>MetaMask</WalletText>
-                  </WalletButton>
-                </li>
-                <li>
-                  <WalletButton className="group" >
-                    <Coinbase />
-                    <WalletText>Coinbase Wallet</WalletText>
-                  </WalletButton>
-                </li>
-                <li>
-                  <WalletButton className="group" >
-                    <Opera />
-                    <WalletText>Opera Wallet</WalletText>
-                  </WalletButton>
-                </li>
-                <li>
-                  <WalletButton className="group" >
-                    <WalletConnect />
-                    <WalletText>WalletConnect</WalletText>
-                  </WalletButton>
-                </li>
-                <li>
-                  <WalletButton className="group" >
-                    <Fortmatic />
-                    <WalletText>Fortmatic</WalletText>
-                  </WalletButton>
-                </li>
-              </ul>
-              <InfoSection>
-                <QuestionCircle />
-                Why do I need to connect with my wallet?
-              </InfoSection>
+            <HelperText>Connect with one of our available wallet providers or create a new one.</HelperText>
+            <ul tw="my-4 space-y-3">
+              <li>
+                <WalletButton className="group">
+                  <MetaMask />
+                  <WalletText>MetaMask</WalletText>
+                </WalletButton>
+              </li>
+              <li>
+                <WalletButton className="group">
+                  <Coinbase />
+                  <WalletText>Coinbase Wallet</WalletText>
+                </WalletButton>
+              </li>
+              <li>
+                <WalletButton className="group">
+                  <Opera />
+                  <WalletText>Opera Wallet</WalletText>
+                </WalletButton>
+              </li>
+              <li>
+                <WalletButton className="group">
+                  <WalletConnect />
+                  <WalletText>WalletConnect</WalletText>
+                </WalletButton>
+              </li>
+              <li>
+                <WalletButton className="group">
+                  <Fortmatic />
+                  <WalletText>Fortmatic</WalletText>
+                </WalletButton>
+              </li>
+            </ul>
+            <InfoSection>
+              <QuestionCircle />
+              Why do I need to connect with my wallet?
+            </InfoSection>
           </div>
         </div>
       </ModalContainer>
