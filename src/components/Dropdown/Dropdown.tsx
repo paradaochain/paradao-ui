@@ -6,7 +6,6 @@ import { RiArrowDownSLine } from 'react-icons/ri';
 interface DropdownProps {
   options: {
     name: string;
-    value?: string;
     click?: () => void;
   }[];
 }
@@ -23,7 +22,7 @@ const Dropdown: React.FC<PropsWithChildren<DropdownProps>> = ({ options, childre
         <button
           type="button"
           className="dropdown-item py-2 px-4 w-full whitespace-nowrap bg-transparent text-gray-700 hover:bg-gray-100"
-          onClick={el.click}
+          onClick={() => [el.click?.(), setOpen(false)]}
         >
           {el.name}
         </button>

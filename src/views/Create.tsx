@@ -77,17 +77,17 @@ const Create: React.FC = () => {
     <div className="p-5 flex flex-col justify-center items-start w-full">
       <h1 className="mb-5 text-2xl text-blue-800">Create DAO</h1>
       <form className="max-w-[55rem] my-0 mx-auto bg-white rounded-lg px-3 py-8 w-full" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex items-center justify-center h-[5rem] mb-2">
-          <InputSubmit setLogo={setLogo} />
+        <div className="flex flex-row gap-4 justify-between mb-8">
+          <div className="flex flex-col items-start justify-center">
+            <Input type="text" placeholder="Dao Name" {...register('name')} error={errors.name} />
+            <Dropdown options={typeOptions}>{type === null ? 'Type...' : displayType}</Dropdown>
+          </div>
+          <div className="flex items-center justify-center h-[5rem]">
+            <InputSubmit setLogo={setLogo} />
+          </div>
         </div>
-        <div className="flex justify-between w-full">
-          <Input type="text" placeholder="Dao Name" {...register('name')} error={errors.name} />
-          <Dropdown options={typeOptions}>{type === null ? 'Type...' : displayType}</Dropdown>
-        </div>
-        <div className="w-full">
-          <TextArea label="Purpose" {...register('purpose')} error={errors.purpose?.message} />
-        </div>
-        <div className="grid grid-cols-4">
+
+        <div className="grid grid-cols-4 gap-4">
           <InputIcon type="text" placeholder="Website" {...register('links.website')} error={errors.links?.website} icon={<BiWorld />} />
           <InputIcon type="text" placeholder="Discord" {...register('links.discord')} error={errors.links?.discord} icon={<BsDiscord />} />
           <InputIcon
@@ -98,6 +98,9 @@ const Create: React.FC = () => {
             icon={<BsInstagram />}
           />
           <InputIcon type="text" placeholder="Youtube" {...register('links.youtube')} error={errors.links?.youtube} icon={<BsYoutube />} />
+        </div>
+        <div className="w-full">
+          <TextArea label="Purpose" {...register('purpose')} error={errors.purpose?.message} />
         </div>
         <div>
           <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>

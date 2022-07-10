@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useLocation } from 'wouter';
 import tw from 'twin.macro';
-import logo from './paradao-icon.svg';
+import logo from './icons/paradao-icon.svg';
 import { View, Add } from '@icons/mui';
 import { usePolkadot } from '@context/polkadot';
 import LightButton from './Button/LightButton';
