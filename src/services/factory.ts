@@ -3,7 +3,7 @@ import { ContractPromise } from '@polkadot/api-contract';
 import factoryAbi from '@abis/factoryMeta.json';
 import { uploadMetada } from './ipfs';
 
-const factoryCodeStoredAccount = '5DopGdTXKkTv1N94QL8moa9GqEvSkPasnAq8UyPjnYMt2fXW';
+const factoryCodeStoredAccount = import.meta.env.VITE_FACTORY_ADDR;
 const gasLimit = 300000n * 1000000n;
 const storageDepositLimit = null;
 
