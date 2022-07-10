@@ -110,7 +110,7 @@ const DaoDetail: React.FC = () => {
         </div>
       </div>
       <div className="p-5 my-5 bg-white w-full rounded-lg">
-        <p className=" text-">{'Here come my dao purpose, idk yet but you are not going to regret it'}</p>
+        <p className=" text-">{daoInfo.purpose}</p>
       </div>
       <div className="grid grid-cols-3 w-full gap-5">
         <div className="bg-white rounded-md p-3">
