@@ -26,7 +26,7 @@ export default LayoutSidebar;
 
 const Sidebar: FC<{ showModal: () => void }> = ({ showModal }) => {
   const [, setLocation] = useLocation();
-  const { loadWallet, address, disconnectWallet } = usePolkadot();
+  const { address, disconnectWallet } = usePolkadot();
 
   return (
     <SideBarAside aria-label="ParaDAO sidebar">

@@ -125,7 +125,7 @@ const DaoDetail: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <Button onClick={handleJoin} disabled={isJoining}>
+          <Button onClick={handleJoin} disabled={isJoining || !address}>
             {isJoining ? 'Joining...' : 'Join'}
             {isJoining && <WhiteSpinner tw="ml-1" />}
           </Button>
