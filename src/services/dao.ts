@@ -1,7 +1,7 @@
 import { ApiPromise } from '@polkadot/api';
 import { ContractPromise } from '@polkadot/api-contract';
 import { IKeyringPair } from '@polkadot/types/types';
-import { getMetadata } from './ipfs';
+import { getMetadata, uploadMetada } from './ipfs';
 import daoAbi from '@abis/daoMeta.json';
 
 const gasLimit = 300000n * 1000000n;
@@ -54,19 +54,45 @@ export class DAOService extends ContractPromise {
   }
 
   async execute(proposalId: number) {
-    await this.tx.join({ storageDepositLimit, gasLimit }, proposalId).signAndSend(this._keypair as IKeyringPair);
+    await this.tx.execute({ storageDepositLimit, gasLimit }, proposalId).signAndSend(this._keypair as IKeyringPair);
   }
 
   async join(did: string) {
     await this.tx.join({ storageDepositLimit, gasLimit }, did).signAndSend(this._keypair as IKeyringPair);
   }
 
-  async propose(proposalType: unknown, title: string, metadataUrl: string) {
+  async propose(proposalType: unknown, title: string, proposalMetadata: unknown) {
+    const metadataUrl = await uploadMetada(proposalMetadata);
     await this.tx.propose({ storageDepositLimit, gasLimit }, proposalType, title, metadataUrl).signAndSend(this._keypair as IKeyringPair);
   }
 
-  async createTreasuryProsal(address: string, balance: number, title: string, metadataUrl: string) {
-    // await this.propose();
+  async createTreasuryProposal(daoInfoMetadata: unknown, title: string, proposalMetadata: unknown) {
+    const metadataUrl = await uploadMetada(daoInfoMetadata);
+    const proposalType = this.api.createType('ProposalType', {
+      UpdateMetadata: metadataUrl
+    });
+    await this.propose(proposalType, title, proposalMetadata);
+  }
+
+  async createFeePorposal(fee: number, title: string, proposalMetadata: unknown) {
+    const proposalType = this.api.createType('ProposalType', {
+      UpdateFee: fee
+    });
+    await this.propose(proposalType, title, proposalMetadata);
+  }
+
+  async createMembersPorposal([members, roles]: [string[], [string, unknown]], title: string, proposalMetadata: unknown) {
+    const proposalType = this.api.createType('ProposalType', {
+      Membership: [members, roles]
+    });
+    await this.propose(proposalType, title, proposalMetadata);
+  }
+
+  async createMetadataProposal(address: string, balance: number, title: string, proposalMetadata: unknown) {
+    const proposalType = this.api.createType('ProposalType', {
+      Treasury: [this.api.createType('AccountId', address), this.api.createType('Balance', balance)]
+    });
+    await this.propose(proposalType, title, proposalMetadata);
   }
 
   async vote(proposalId: number, vote: boolean) {

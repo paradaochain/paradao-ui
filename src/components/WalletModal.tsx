@@ -97,7 +97,7 @@ const Wallet: FC<{ hideModal: () => void }> = ({ hideModal }) => {
                   <WalletText>MetaMask</WalletText>
                 </WalletButton>
               </li>
-              <li>
+              {/*   <li>
                 <WalletButton className="group">
                   <Coinbase />
                   <WalletText>Coinbase Wallet</WalletText>
@@ -120,7 +120,7 @@ const Wallet: FC<{ hideModal: () => void }> = ({ hideModal }) => {
                   <Fortmatic />
                   <WalletText>Fortmatic</WalletText>
                 </WalletButton>
-              </li>
+              </li> */}
             </ul>
             <InfoSection>
               <QuestionCircle />

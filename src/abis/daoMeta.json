@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0xd32e9c306d4dbf5213a0ee963b2dcf94074c26f65e66d8136e3ad7b713faa6d0",
+    "hash": "0x17b0c8efe04883914c6c03f77f35dcef75ac3bffe3c26f1e60d4726ef7ad4dd2",
     "language": "ink! 3.3.0",
     "compiler": "rustc 1.64.0-nightly"
   },
@@ -724,11 +724,31 @@
                 {
                   "fields": [
                     {
+                      "type": 0,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 2,
+                  "name": "UpdateMetadata"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 1,
+                      "typeName": "Balance"
+                    }
+                  ],
+                  "index": 3,
+                  "name": "UpdateFee"
+                },
+                {
+                  "fields": [
+                    {
                       "type": 15,
                       "typeName": "Transaction"
                     }
                   ],
-                  "index": 2,
+                  "index": 4,
                   "name": "Proxy"
                 }
               ]
