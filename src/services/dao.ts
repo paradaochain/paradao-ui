@@ -1,6 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
 import { ContractPromise } from '@polkadot/api-contract';
-import { IKeyringPair } from '@polkadot/types/types';
 import { getMetadata, uploadMetada } from './ipfs';
 import daoAbi from '@abis/daoMeta.json';
 
@@ -8,14 +7,14 @@ const gasLimit = 300000n * 1000000n;
 const storageDepositLimit = null;
 
 export class DAOService extends ContractPromise {
-  private _keypair?: IKeyringPair;
-  constructor(api: ApiPromise, address: string, keypair?: IKeyringPair) {
-    super(api, daoAbi, address);
-    this._keypair = keypair;
+  private _address?: string;
+  constructor(api: ApiPromise, contractAddress: string, userAddress?: string) {
+    super(api, daoAbi, contractAddress);
+    this._address = userAddress;
   }
 
-  setKeypair(keypair: IKeyringPair) {
-    this._keypair = keypair;
+  setUserAddress(address: string) {
+    this._address = address;
   }
 
   async info() {
@@ -50,20 +49,20 @@ export class DAOService extends ContractPromise {
   }
 
   async voteOf(proposalId: number, account: string) {
-    await this.tx.voteOf({ storageDepositLimit, gasLimit }, proposalId, account).signAndSend(this._keypair as IKeyringPair);
+    await this.tx.voteOf({ storageDepositLimit, gasLimit }, proposalId, account).signAndSend(this._address as string);
   }
 
   async execute(proposalId: number) {
-    await this.tx.execute({ storageDepositLimit, gasLimit }, proposalId).signAndSend(this._keypair as IKeyringPair);
+    await this.tx.execute({ storageDepositLimit, gasLimit }, proposalId).signAndSend(this._address as string);
   }
 
   async join(did: string) {
-    await this.tx.join({ storageDepositLimit, gasLimit }, did).signAndSend(this._keypair as IKeyringPair);
+    await this.tx.join({ storageDepositLimit, gasLimit }, did).signAndSend(this._address as string);
   }
 
   async propose(proposalType: unknown, title: string, proposalMetadata: unknown) {
     const metadataUrl = await uploadMetada(proposalMetadata);
-    await this.tx.propose({ storageDepositLimit, gasLimit }, proposalType, title, metadataUrl).signAndSend(this._keypair as IKeyringPair);
+    await this.tx.propose({ storageDepositLimit, gasLimit }, proposalType, title, metadataUrl).signAndSend(this._address as string);
   }
 
   async createTreasuryProposal(daoInfoMetadata: unknown, title: string, proposalMetadata: unknown) {
@@ -96,6 +95,6 @@ export class DAOService extends ContractPromise {
   }
 
   async vote(proposalId: number, vote: boolean) {
-    await this.tx.vote({ storageDepositLimit, gasLimit }, proposalId, vote).signAndSend(this._keypair as IKeyringPair);
+    await this.tx.vote({ storageDepositLimit, gasLimit }, proposalId, vote).signAndSend(this._address as string);
   }
 }

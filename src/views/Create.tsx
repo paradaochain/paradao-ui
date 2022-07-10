@@ -1,54 +1,17 @@
-import React, { FC, PropsWithChildren, useState, useContext } from 'react';
+import React, { FC, PropsWithChildren, useRef, useState } from 'react';
 import tw from 'twin.macro';
-import { ApiPromise } from '@polkadot/api';
-import { ContractPromise, } from '@polkadot/api-contract';
-import { web3FromAddress } from '@polkadot/extension-dapp';
-import { AccountContext, AccoutContextType } from '@context/wallet';
-import factoryAbi from '@abis/factoryMeta.json';
 import { CircleComplete, CircleOutline, Next } from '@icons/mui';
-import Button, { CreateFormButton as SectionBtn } from '@components/Button';
+import { CreateFormButton as SectionBtn } from '@components/Button';
+import { usePolkadot } from '@context/polkadot';
 
 type Sections = 'DaoInfo' | 'Links' | 'Members' | 'Voting';
 
-// need to manually upload the dao.wasm file once onto the chain
-// const daoCodeStoredHash = '0x2bfb721b97ce9267284eb025eec20545de25da43be88b28b9f7e45d098448b58';
-
-// for now also need to manually upload/deploy 'factory.contract' -- and save the hash here  -- should we code this??
-// NOTE UPDATE THIS WITH THE ID FROM YOUR LOCAL CHAIN
-const factoryCodeStoredAccount = '5Fxj4rishzAD767k7NgMKDzRz6BipekLmbq2Ufu4W3mp61kN';
-
-export const createDao = async (injAddr: string) => {
-  const api = await ApiPromise.create();
-  const injector = await web3FromAddress(injAddr);
-  const contract = new ContractPromise(api, factoryAbi, factoryCodeStoredAccount);
-
-  const gasLimit = 100000n * 1000000n;
-  const storageDepositLimit = null;
-  const name = 'gilsons';
-  const ty = 0;
-  const fee = 10;
-  const salt = 0;
-  const stars = null;
-
-  await contract.tx
-    .createDao({ storageDepositLimit, gasLimit }, name, ty, stars, salt, fee)
-    .signAndSend(injAddr, { signer: injector.signer }, result => {
-      if (result.status.isInBlock) {
-        console.log(`${ name } in a block`);
-      } else if (result.status.isFinalized) {
-        console.log(`${ name } finalized`);
-      }
-    });
-};
-
 const Create: React.FC = () => {
   const [visibleSection, setVisibleSection] = useState<Sections>('DaoInfo');
-  const { account } = useContext(AccountContext) as AccoutContextType;
 
   return (
     <div tw="ml-4 my-8 space-y-8 flex flex-col justify-center items-start">
       <h1 tw="ml-2 text-2xl text-blue-800">Lets fucking do this</h1>
-      <Button onClick={ () => createDao(account.address) }>Test Create</Button>
       <div tw="space-x-12 flex flex-row justify-center items-start">
         <FormSteps setVisible={setVisibleSection} />
         <DaoForm setVisible={setVisibleSection} visibleSection={visibleSection} />
@@ -83,14 +46,14 @@ const FormSteps: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) =>
 
   return (
     <StepsOl>
-      <StepLi onClick={() => setVisible('DaoInfo')}>
-        {true ? <Done /> : <Todo />}
+      <StepLiLast onClick={() => setVisible('DaoInfo')}>
+        {false ? <Done /> : <Todo />}
         <StepH3>DAO Info</StepH3>
-      </StepLi>
-      <StepLi onClick={() => setVisible('Links')}>
-        {true ? <Done /> : <Todo />}
+      </StepLiLast>
+      {/*  <StepLiLast onClick={() => setVisible('Links')}>
+        {false ? <Done /> : <Todo />}
         <StepH3>Social Media</StepH3>
-      </StepLi>
+      </StepLiLast>
       <StepLi onClick={() => setVisible('Members')}>
         {false ? <Done /> : <Todo />}
         <StepH3>Members</StepH3>
@@ -98,17 +61,18 @@ const FormSteps: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) =>
       <StepLiLast onClick={() => setVisible('Voting')}>
         {false ? <Done /> : <Todo />}
         <StepH3>Voting</StepH3>
-      </StepLiLast>
+      </StepLiLast> */}
     </StepsOl>
   );
 };
 
 const DaoForm: FC<{ setVisible: (x: Sections) => void; visibleSection: string }> = ({ setVisible, visibleSection }) => {
+  const formRef = useRef<HTMLFormElement>(null);
   return (
     <FormCard>
-      <form tw="w-full h-full relative">
-        {visibleSection === 'DaoInfo' && <DaoInfoFormSection setVisible={setVisible} />}
-        {visibleSection === 'Links' && <LinksFormSection setVisible={setVisible} />}
+      <form tw="w-full h-full relative" ref={formRef}>
+        {visibleSection === 'DaoInfo' && <DaoInfoFormSection formRef={formRef} />}
+        {visibleSection === 'Links' && <LinksFormSection />}
         {visibleSection === 'Members' && <MembersFormSection setVisible={setVisible} />}
         {visibleSection === 'Voting' && <VotingFormSection />}
       </form>
@@ -130,7 +94,14 @@ const TextArea = tw.textarea`block py-2.5 px-0 w-full text-sm text-gray-900 bg-t
 const AdminCheckBox = tw.input`w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring focus:ring-blue-300`;
 const AdminCheckLabel = tw.label`ml-2 text-sm font-medium text-gray-500`;
 
-const DaoInfoFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
+const DaoInfoFormSection: FC<{ formRef: React.RefObject<HTMLFormElement> }> = ({ formRef }) => {
+  const { factoryService } = usePolkadot();
+  const createDao = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (!formRef.current) return;
+    e.preventDefault();
+    const { name, type, fee, ...metadata } = Object.fromEntries(new FormData(formRef.current).entries());
+    await factoryService.createDao(name as string, metadata, +type, +fee);
+  };
   return (
     <>
       <FormHeader>Dao Name and description</FormHeader>
@@ -139,22 +110,26 @@ const DaoInfoFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisi
         <Label htmlFor="dao_name">Dao Name</Label>
       </InputContainer>
       <InputContainer>
-        <Input tw="w-36" className="peer" type="text" name="token" placeholder=" " required />
-        <Label htmlFor="token">Token Name</Label>
+        <TextArea id="purpose" rows={2} maxLength={410} tw="w-96" className="peer" name="purpose" placeholder={' '} required />
+        <Label htmlFor="purpose">Purpose</Label>
       </InputContainer>
       <InputContainer>
-        <TextArea id="descrip" rows={2} maxLength={410} tw="w-96" className="peer" name="descrip" placeholder={' '} required />
-        <Label htmlFor="descrip">Description</Label>
+        <Input tw="w-36" className="peer" type="text" name="type" placeholder=" " required />
+        <Label htmlFor="type">DAO Type</Label>
       </InputContainer>
-      <SectionBtn onClick={() => setVisible('Links')}>
-        Next
+      <InputContainer>
+        <Input tw="w-36" className="peer" type="text" name="fee" placeholder=" " required />
+        <Label htmlFor="fee">Joining Fee</Label>
+      </InputContainer>
+      <SectionBtn onClick={createDao}>
+        Submit
         <Next />
       </SectionBtn>
     </>
   );
 };
-
-const LinksFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisible }) => {
+/* createDao (name: String, metadataUrl: String, ty: u32, joiningFee: Balance, initMembers: Option<Vec<(AccountId,Text,DaoRole)>>, salt: u32) */
+const LinksFormSection: FC = () => {
   return (
     <>
       <FormHeader>Add Social Media Links</FormHeader>
@@ -170,8 +145,8 @@ const LinksFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisibl
         <Input tw="w-96" className="peer" type="text" name="discord" placeholder=" " required />
         <Label htmlFor="discord">Discord</Label>
       </InputContainer>
-      <SectionBtn onClick={() => setVisible('Members')}>
-        Next
+      <SectionBtn>
+        Submit
         <Next />
       </SectionBtn>
     </>
@@ -237,7 +212,7 @@ const VotingFormSection: FC = () => {
         <Input tw="w-96" className="peer" type="text" name="discord" placeholder=" " required />
         <Label htmlFor="discord">Discord</Label>
       </InputContainer>
-      <SectionBtn disabled onClick={(e) => e.preventDefault()}>
+      <SectionBtn onClick={t}>
         Submit
         <Next />
       </SectionBtn>

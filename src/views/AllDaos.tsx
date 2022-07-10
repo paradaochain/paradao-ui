@@ -1,22 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation } from 'wouter';
-import tw from 'twin.macro';
-import { ApiPromise } from '@polkadot/api';
-// import { web3FromAddress } from '@polkadot/extension-dapp';
-import { Keyring } from '@polkadot/api';
-// import { AccountContext, AccoutContextType } from '@context/wallet';
-import Button from '@components/Button';
-import { daoList } from '@views/fakeData';
 import { usePolkadot } from '@context/polkadot';
-
-export const getDaos = async (api: ApiPromise) => {
-  const alice = new Keyring({ type: 'sr25519' }).addFromUri('//Alice', { name: 'Alice default' });
-};
+import { daoList } from '@views/fakeData';
+import Button from '@components/Button';
+import tw from 'twin.macro';
 
 const AllDaos: React.FC = () => {
   const [, setLocation] = useLocation();
-  const { api } = usePolkadot();
-  // const { account } = useContext(AccountContext) as AccoutContextType;
+  const { factoryService } = usePolkadot();
 
   return (
     <div tw="ml-4 my-8 space-y-8 flex flex-col justify-center items-start">
@@ -24,7 +15,7 @@ const AllDaos: React.FC = () => {
         <h1 tw="ml-2 text-2xl text-blue-800">All DAOs</h1>
         <Button onClick={() => setLocation('/create')}>Create a new DAO</Button>
       </div>
-      <Button onClick={() => getDaos(api)}>Test Get DAOs</Button>
+      <Button onClick={() => factoryService.getNextIndex().then(console.log)}>Test Get DAOs</Button>
       <div tw="flex flex-wrap justify-center items-center h-full w-full overflow-auto">
         {daoList.map((dao, i) => (
           <DaoCard key={`${dao.token}${i}`} {...dao} />
