@@ -2,9 +2,7 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {}
   },
@@ -12,15 +10,15 @@ module.exports = {
     plugin(function ({ addUtilities }) {
       addUtilities({
         '.truncate-3-lines': {
-          'overflow': 'hidden',
+          overflow: 'hidden',
           'text-overflow': 'ellipsis',
           'white-space': 'nowrap',
-          'display': '-webkit-box',
+          display: '-webkit-box',
           '-webkit-line-clamp': '3',
-          'line-clamp': '3', 
-          '-webkit-box-orient': 'vertical',
-        },
+          'line-clamp': '3',
+          '-webkit-box-orient': 'vertical'
+        }
       });
-    }),
-],
+    })
+  ]
 };

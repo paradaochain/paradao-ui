@@ -24,11 +24,10 @@ const Layout: FC<PropsWithChildren> = ({ children: Component }) => {
           {/* <Header /> */}
           <ContentContainer>
             <Breadcrumbs />
-            <main className="w-full">{Component}</main>
+            <main className="w-full my-0 mx-auto">{Component}</main>
           </ContentContainer>
         </div>
       </div>
-      {/* <div tw="flex">Footer</div> */}
     </ScreenContainer>
   );
 };

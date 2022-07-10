@@ -1,6 +1,6 @@
 import React, { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
-import { ApiPromise } from '@polkadot/api';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import { FactoryService } from '@services/factory';
 import { deleteSession, getSession, setSession } from '@services/localStorage';
 
@@ -69,7 +69,9 @@ export const usePolkadot = () => {
 };
 
 const loadApi = async () => {
+  const provider = new WsProvider('ws://192.168.1.72:9944');
   return await ApiPromise.create({
+    provider,
     types: {
       Balance: 'u64',
       AccountId: 'String',
