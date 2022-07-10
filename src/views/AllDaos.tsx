@@ -4,10 +4,11 @@ import { usePolkadot } from '@context/polkadot';
 import Button from '@components/Button/Button';
 import tw from 'twin.macro';
 import { DAOService } from '@services/dao';
+import DAO from '@interfaces/Dao';
 
 const AllDaos: React.FC = () => {
   const [, setLocation] = useLocation();
-  const [daos, setDaos] = useState<DaoProps[]>([]);
+  const [daos, setDaos] = useState<DAO[]>([]);
   const { api, factoryService } = usePolkadot();
 
   useEffect(() => {
@@ -17,11 +18,7 @@ const AllDaos: React.FC = () => {
       const daos = await Promise.all(
         daosAddresses.map(async (address) => {
           const service = new DAOService(api, address);
-          const { metadata, ...info } = await service.info();
-          const members = await service.totalMembers();
-          const totalProposals = await service.totalProposals();
-          const funds = await service.getBalance();
-          return { ...info, ...metadata, daoAddress: address, members, totalProposals, funds };
+          return await service.getInfoPopulated();
         })
       );
       setDaos(daos);
@@ -35,7 +32,6 @@ const AllDaos: React.FC = () => {
         <h1 tw="ml-2 text-2xl text-blue-800">All DAOs</h1>
         <Button onClick={() => setLocation('/create')}>Create a new DAO</Button>
       </div>
-      <Button onClick={() => factoryService.getNextIndex().then(console.log)}>Test Get DAOs</Button>
       <div tw="flex flex-wrap justify-center items-center h-full w-full overflow-auto">
         {daos.map((dao, i) => (
           <DaoCard key={`${dao.name}${i}`} {...dao} />
@@ -47,18 +43,6 @@ const AllDaos: React.FC = () => {
 
 export default AllDaos;
 
-type DaoProps = {
-  name: string;
-  token: string;
-  daoAddress: string;
-  descrip?: string;
-  logo: string;
-  funds: string;
-  members: number;
-  totalProposals: number;
-  links?: Record<string, unknown>;
-};
-
 const CardContainer = tw.div`block p-6 m-4 height[28rem] width[440px] bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100`;
 const CardHeader = tw.div`flex flex-row justify-start items-start space-x-4 w-full`;
 const CardDescrip = tw.div`w-full`;
@@ -68,10 +52,10 @@ const CardStatTitle = tw.p`text-xs font-bold text-gray-400 tracking-tight`;
 const CardStatData = tw.p`text-lg font-bold text-gray-800 tracking-wider`;
 const CardProposals = tw.div`flex flex-col w-full justify-center items-center`;
 
-const DaoCard: React.FC<DaoProps> = ({ name, daoAddress, descrip, logo, funds, members, totalProposals }) => {
+const DaoCard: React.FC<DAO> = ({ name, address, purpose, logo, funds, members, totalProposals }) => {
   const [, setLocation] = useLocation();
   return (
-    <CardContainer onClick={() => setLocation('/dao-detail')}>
+    <CardContainer onClick={() => setLocation(`/dao/${address}`)}>
       <div tw="flex flex-col justify-between items-center w-full h-full">
         <CardHeader>
           <div tw="w-20 h-20">
@@ -79,11 +63,11 @@ const DaoCard: React.FC<DaoProps> = ({ name, daoAddress, descrip, logo, funds, m
           </div>
           <div tw="flex flex-col space-y-2 font-medium justify-start items-start">
             <div tw="text-2xl font-bold tracking-tight">{name}</div>
-            <div tw="text-sm text-gray-500">{daoAddress}</div>
+            <div tw="text-sm text-gray-500">{address}</div>
           </div>
         </CardHeader>
         <CardDescrip>
-          <p tw="w-full h-full font-normal text-gray-700 truncate">{descrip}</p>
+          <p tw="w-full h-full font-normal text-gray-700 truncate">{purpose}</p>
         </CardDescrip>
         <CardStats>
           <CardStat>

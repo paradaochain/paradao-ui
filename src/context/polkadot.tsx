@@ -6,7 +6,7 @@ import { FactoryService } from '@services/factory';
 interface PolkadotContextState {
   api: ApiPromise;
   factoryService: FactoryService;
-  address: string | null;
+  address?: string;
   loadWallet: () => Promise<void>;
 }
 
@@ -19,7 +19,7 @@ export const PolakdotContext = createContext<PolkadotContextState | null>(null);
 const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallback }) => {
   const [api, setApi] = useState<ApiPromise | null>(null);
   const [factoryService, setFactoryService] = useState<FactoryService | null>(null);
-  const [address, setAddress] = useState<string | null>(null);
+  const [address, setAddress] = useState<string>();
 
   const loadWallet = useCallback(async () => {
     await web3Enable('Para DAO');

@@ -2,6 +2,8 @@ import { ApiPromise } from '@polkadot/api';
 import { ContractPromise } from '@polkadot/api-contract';
 import { getMetadata, uploadMetada } from './ipfs';
 import daoAbi from '@abis/daoMeta.json';
+import DAO from '@interfaces/Dao';
+import { Proposal } from '@interfaces/Proposal';
 
 const gasLimit = 300000n * 1000000n;
 const storageDepositLimit = null;
@@ -17,12 +19,20 @@ export class DAOService extends ContractPromise {
     this._address = address;
   }
 
-  async info(): Promise<Record<string, string | number | object | unknown>> {
+  async info(): Promise<Record<string, unknown>> {
     const { output } = await this.query.info('', {});
     if (!output) throw new Error('there was an error fetch dao info');
     const { metadataUrl, ...info } = output.toJSON() as Record<string, string>;
     if (metadataUrl.length < 20) return info;
     return { ...info, metadata: await getMetadata(metadataUrl) };
+  }
+
+  async getInfoPopulated(): Promise<DAO> {
+    const { metadata, ...info } = await this.info();
+    const members = await this.totalMembers();
+    const totalProposals = await this.totalProposals();
+    const funds = await this.getBalance();
+    return { ...info, ...(metadata as object), address: this.address.toString(), members, totalProposals, funds } as DAO;
   }
 
   async getBalance() {
@@ -31,10 +41,10 @@ export class DAOService extends ContractPromise {
     return parsedResult.data.free;
   }
 
-  async proposalInfo(proposalId: number) {
+  async proposalInfo(proposalId: number): Promise<Proposal | null> {
     const { output } = await this.query.proposalInfo('', {}, proposalId);
     if (!output) return null;
-    return output.toJSON();
+    return output.toJSON() as unknown as Proposal;
   }
 
   async roleOf(address: string) {
@@ -102,6 +112,6 @@ export class DAOService extends ContractPromise {
   }
 
   async vote(proposalId: number, vote: boolean) {
-    await this.tx.vote({ storageDepositLimit, gasLimit }, proposalId, vote).signAndSend(this._address as string);
+    await this.tx.vote({ storageDepositLimit, gasLimit }, proposalId, +vote).signAndSend(this._address as string);
   }
 }

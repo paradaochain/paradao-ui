@@ -24,7 +24,7 @@ const Layout: FC<PropsWithChildren> = ({ children: Component }) => {
           <Header />
           <ContentContainer>
             <Breadcrumbs />
-            <div>{Component}</div>
+            <main className="w-full">{Component}</main>
           </ContentContainer>
         </div>
       </div>

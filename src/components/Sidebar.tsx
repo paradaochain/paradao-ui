@@ -21,7 +21,7 @@ const LayoutSidebar: FC = () => {
 export default LayoutSidebar;
 
 const Sidebar: FC = () => {
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
   return (
     <SideBarAside aria-label="ParaDAO sidebar">
@@ -33,7 +33,7 @@ const Sidebar: FC = () => {
         </LogoButton>
         <ul tw="space-y-2">
           <li>
-            <SideBarBtn onClick={() => setLocation('/all-daos')}>
+            <SideBarBtn onClick={() => setLocation('/')}>
               <View />
               <SideBarTxt>View all DAOs</SideBarTxt>
             </SideBarBtn>

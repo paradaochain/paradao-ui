@@ -4,8 +4,12 @@ export interface Proposal {
   title: string;
   metadata_url: string;
   proposer: string;
-  expires: Date;
-  tx: ProposalStatus;
+  expires: number;
+  status: ProposalStatus;
+  tx: Record<string, unknown>;
   threshold: number;
-  votes: number;
+}
+
+export interface ProposalWithId extends Proposal {
+  id: number;
 }
