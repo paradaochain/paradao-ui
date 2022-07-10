@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'wouter';
 import { usePolkadot } from '@context/polkadot';
 import { daoList } from '@views/fakeData';
-import Button from '@components/Button';
+import Button from '@components/Button/Button';
 import tw from 'twin.macro';
 
 const AllDaos: React.FC = () => {
@@ -50,8 +50,9 @@ const CardStatData = tw.p`text-lg font-bold text-gray-800 tracking-wider`;
 const CardProposals = tw.div`flex flex-col w-full justify-center items-center`;
 
 const DaoCard: React.FC<DaoProps> = ({ name, daoAddress, descrip, logo, funds, members, activeProposals, totalProposals }) => {
+  const [, setLocation] = useLocation();
   return (
-    <CardContainer>
+    <CardContainer onClick={() => setLocation('/dao-detail')}>
       <div tw="flex flex-col justify-between items-center w-full h-full">
         <CardHeader>
           <div tw="w-20 h-20">

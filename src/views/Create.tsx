@@ -1,7 +1,7 @@
 import React, { FC, PropsWithChildren, useRef, useState } from 'react';
 import tw from 'twin.macro';
 import { CircleComplete, CircleOutline, Next } from '@icons/mui';
-import { CreateFormButton as SectionBtn } from '@components/Button';
+import Button from '@components/Button/Button';
 import { usePolkadot } from '@context/polkadot';
 
 type Sections = 'DaoInfo' | 'Links' | 'Members' | 'Voting';
@@ -90,7 +90,7 @@ const InputContainer = tw.div`relative z-0 w-full mb-6`;
 const Input = tw.input`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600`;
 const Label = tw.label`peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6`;
 const TextArea = tw.textarea`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600`;
-// const SectionBtn = tw.button`inline-flex items-center absolute right-0 bottom-0 py-2 px-3 text-sm font-medium text-center text-white bg-gray-700 rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300`;
+// const Button = tw.button`inline-flex items-center absolute right-0 bottom-0 py-2 px-3 text-sm font-medium text-center text-white bg-gray-700 rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300`;
 const AdminCheckBox = tw.input`w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring focus:ring-blue-300`;
 const AdminCheckLabel = tw.label`ml-2 text-sm font-medium text-gray-500`;
 
@@ -121,10 +121,10 @@ const DaoInfoFormSection: FC<{ formRef: React.RefObject<HTMLFormElement> }> = ({
         <Input tw="w-36" className="peer" type="text" name="fee" placeholder=" " required />
         <Label htmlFor="fee">Joining Fee</Label>
       </InputContainer>
-      <SectionBtn onClick={createDao}>
+      <Button onClick={createDao}>
         Submit
         <Next />
-      </SectionBtn>
+      </Button>
     </>
   );
 };
@@ -145,10 +145,10 @@ const LinksFormSection: FC = () => {
         <Input tw="w-96" className="peer" type="text" name="discord" placeholder=" " required />
         <Label htmlFor="discord">Discord</Label>
       </InputContainer>
-      <SectionBtn>
+      <Button>
         Submit
         <Next />
-      </SectionBtn>
+      </Button>
     </>
   );
 };
@@ -187,10 +187,10 @@ const MembersFormSection: FC<{ setVisible: (x: Sections) => void }> = ({ setVisi
           <AdminCheckLabel htmlFor="admin">Admin</AdminCheckLabel>
         </div>
       </InputContainer>
-      <SectionBtn onClick={() => setVisible('Voting')}>
+      <Button onClick={() => setVisible('Voting')}>
         Next
         <Next />
-      </SectionBtn>
+      </Button>
     </>
   );
 };
@@ -212,10 +212,10 @@ const VotingFormSection: FC = () => {
         <Input tw="w-96" className="peer" type="text" name="discord" placeholder=" " required />
         <Label htmlFor="discord">Discord</Label>
       </InputContainer>
-      <SectionBtn onClick={t}>
+      <Button>
         Submit
         <Next />
-      </SectionBtn>
+      </Button>
     </>
   );
 };

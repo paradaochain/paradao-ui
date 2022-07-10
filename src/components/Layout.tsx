@@ -4,7 +4,7 @@ import { useLocation } from 'wouter';
 import logo from './paradao-icon.svg';
 import Sidebar from '@components/Sidebar';
 import Breadcrumbs from '@components/Breadcrumbs';
-import Button from '@components/Button';
+import Button from '@components/Button/Button';
 import { useMobile } from '@utils/responsive';
 import { SearchIcon, MenuIcon, WalletIcon } from '@icons/mui';
 import { usePolkadot } from '@context/polkadot';
