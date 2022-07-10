@@ -2,7 +2,7 @@ import Input from '@components/Input/Input';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, useController } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
 import Dropdown from '@components/Dropdown/Dropdown';
 import InputSubmit from '@components/Input/InputSubmit';
@@ -12,11 +12,13 @@ import { BsInstagram } from 'react-icons/bs';
 import { BsYoutube } from 'react-icons/bs';
 import { BiWorld } from 'react-icons/bi';
 import LightButton from '@components/Button/LightButton';
+import { usePolkadot } from '@context/polkadot';
 interface CreateDaoInputs {
   name: string;
   purpose: string;
-  type: string;
-  fee: string;
+  logo: string;
+  type: number;
+  fee: number;
   links?: {
     discord?: string;
     website?: string;
@@ -32,6 +34,7 @@ const resolver = yupResolver(
       purpose: yup.string().required(),
       type: yup.number().required(),
       fee: yup.string().required(),
+      logo: yup.string().notRequired(),
       links: yup.object().shape({
         instagram: yup.string().notRequired(),
         website: yup.string().notRequired(),
@@ -43,12 +46,16 @@ const resolver = yupResolver(
 );
 
 const Create: React.FC = () => {
-  const { register, handleSubmit, setError, formState } = useForm<CreateDaoInputs>({ resolver });
+  const { register, handleSubmit, formState, setValue, watch } = useForm<CreateDaoInputs>({});
+  const { factoryService } = usePolkadot();
   const { errors, isSubmitting } = formState;
-  const [type, setType] = useState<boolean | null>(null);
+  const type = watch('type');
 
-  const onSubmit: SubmitHandler<CreateDaoInputs> = ({ ...createData }) => {
-    console.log(createData);
+  const setType = (type: boolean) => setValue('type', +type);
+  const setLogo = (logo: string) => setValue('logo', logo);
+
+  const onSubmit: SubmitHandler<CreateDaoInputs> = async ({ name, type, fee, ...metadata }) => {
+    await factoryService.createDao(name, metadata, type, fee);
   };
 
   const displayType = type ? 'Communitary' : 'SuperStar';
@@ -56,14 +63,13 @@ const Create: React.FC = () => {
     { name: 'SuperStar', click: () => setType(false) },
     { name: 'Communitary', click: () => setType(true) }
   ];
-  console.log(formState.errors);
 
   return (
     <div className="p-5 flex flex-col justify-center items-start w-full">
       <h1 className="mb-5 text-2xl text-blue-800">Create DAO</h1>
-      <form className="max-w-[55rem] my-0 mx-auto bg-white rounded-lg px-3 py-8 w-full" onSubmit={(e) => e.preventDefault()}>
+      <form className="max-w-[55rem] my-0 mx-auto bg-white rounded-lg px-3 py-8 w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-center justify-center h-[5rem] mb-2">
-          <InputSubmit />
+          <InputSubmit setLogo={setLogo} />
         </div>
         <div className="flex justify-between w-full">
           <Input type="text" placeholder="Dao Name" {...register('name')} error={errors.name} />
@@ -85,7 +91,7 @@ const Create: React.FC = () => {
           <InputIcon type="text" placeholder="Youtube" {...register('links.youtube')} error={errors.links?.youtube} icon={<BsYoutube />} />
         </div>
         <div>
-          <LightButton onClick={handleSubmit(onSubmit)} disabled={formState.errors && !formState.dirtyFields ? true : false}>
+          <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
             {isSubmitting ? '...Loading' : 'Submit'}
           </LightButton>
         </div>

@@ -5,7 +5,7 @@ import { BsInstagram } from 'react-icons/bs';
 import { BsYoutube } from 'react-icons/bs';
 import { BiWorld } from 'react-icons/bi';
 import ProposalList from '@components/ProposalList/ProposalList';
-import { Proposal, ProposalWithId } from '@interfaces/Proposal';
+import { ProposalWithId } from '@interfaces/Proposal';
 import { useLocation, useRoute } from 'wouter';
 import { DAOService } from '@services/dao';
 import { usePolkadot } from '@context/polkadot';
@@ -81,8 +81,8 @@ const DaoDetail: React.FC = () => {
             <div className="text-center font-bold">
               <p className="text-xs text-gray-500 w-full">Social Links</p>
               <div className="flex  items-center justify-center gap-5">
-                {daoInfo.links?.homepage && (
-                  <a href={daoInfo.links.homepage}>
+                {daoInfo.links?.website && (
+                  <a href={daoInfo.links.website}>
                     <BiWorld className=" w-5 h-5  text-purple-900 hover:text-purple-500" />
                   </a>
                 )}
