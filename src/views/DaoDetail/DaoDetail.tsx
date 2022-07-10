@@ -144,7 +144,7 @@ const DaoDetail: React.FC = () => {
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Prediction Markets</h3>
-          <h3 className="font-bold text-md text-center">{daoInfo.totalPms} Para</h3>
+          <h3 className="font-bold text-md text-center">{daoInfo.totalPms}</h3>
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Proposals</h3>

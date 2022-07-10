@@ -63,7 +63,7 @@ const Create: React.FC = () => {
     setIsCreating(true);
     setTimeout(() => {
       setIsCreating(false);
-      toast.error('Could not join now :( Try again?');
+      toast.error('Could not create now :( Try again?');
     }, 120000);
     try {
       const daoAddr = await factoryService.createDao(name, metadata, type, fee);
