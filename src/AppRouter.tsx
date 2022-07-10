@@ -1,5 +1,5 @@
 import React, { lazy } from 'react';
-import { Switch } from 'wouter';
+import { Redirect, Switch } from 'wouter';
 import WRoute from '@components/WRoute';
 
 /* const Home = lazy(() => import('@views/Home')); */
@@ -13,6 +13,7 @@ const AppRouter: React.FC = () => {
       <WRoute layout path="/" component={AllDaos} />
       <WRoute layout path="/create" component={Create} />
       <WRoute layout path="/dao/:daoAddress" component={DaoDetail} />
+      <Redirect to="/" />
     </Switch>
   );
 };

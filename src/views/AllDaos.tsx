@@ -5,6 +5,7 @@ import Button from '@components/Button/Button';
 import tw from 'twin.macro';
 import { DAOService } from '@services/dao';
 import DAO from '@interfaces/Dao';
+import { IntlAddress } from '@utils/Intl';
 
 const AllDaos: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -63,7 +64,7 @@ const DaoCard: React.FC<DAO> = ({ name, address, purpose, logo, funds, members, 
           </div>
           <div tw="flex flex-col space-y-2 font-medium justify-start items-start">
             <div tw="text-2xl font-bold tracking-tight">{name}</div>
-            <div tw="text-sm text-gray-500">{address}</div>
+            <div tw="text-sm text-gray-500">{IntlAddress(address)}</div>
           </div>
         </CardHeader>
         <CardDescrip>

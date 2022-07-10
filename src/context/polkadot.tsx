@@ -2,12 +2,14 @@ import React, { createContext, PropsWithChildren, useCallback, useContext, useEf
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { ApiPromise } from '@polkadot/api';
 import { FactoryService } from '@services/factory';
+import { deleteSession, getSession, setSession } from '@services/localStorage';
 
 interface PolkadotContextState {
   api: ApiPromise;
   factoryService: FactoryService;
   address?: string;
   loadWallet: () => Promise<void>;
+  disconnectWallet: () => void;
 }
 
 interface Props {
@@ -25,10 +27,21 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
     await web3Enable('Para DAO');
     const [{ address }] = await web3Accounts();
     const { signer } = await web3FromAddress(address);
-    if (!api || !factoryService) throw new Error('factory service or api is not loaded');
+    if (!api || !factoryService) return;
     setAddress(address);
     api.setSigner(signer);
     factoryService.setUserAddress(address);
+    setSession({ allowConnection: true });
+  }, [api, factoryService]);
+
+  const disconnectWallet = useCallback(() => {
+    setAddress(undefined);
+    deleteSession();
+  }, []);
+
+  useEffect(() => {
+    const session = getSession();
+    if (session?.allowConnection) loadWallet();
   }, [api, factoryService]);
 
   useEffect(() => {
@@ -41,7 +54,9 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
   if (!api?.isConnected) return fallback;
 
   return (
-    <PolakdotContext.Provider value={{ api, factoryService, loadWallet, address } as PolkadotContextState}>{children}</PolakdotContext.Provider>
+    <PolakdotContext.Provider value={{ api, factoryService, loadWallet, address, disconnectWallet } as PolkadotContextState}>
+      {children}
+    </PolakdotContext.Provider>
   );
 };
 

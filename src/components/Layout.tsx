@@ -21,7 +21,7 @@ const Layout: FC<PropsWithChildren> = ({ children: Component }) => {
         {/* TODO  mobile menu */}
         {!isMobile && <Sidebar />}
         <div tw="flex flex-1 flex-col">
-          <Header />
+          {/* <Header /> */}
           <ContentContainer>
             <Breadcrumbs />
             <main className="w-full">{Component}</main>
