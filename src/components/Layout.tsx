@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren, useState } from 'react';
 import tw from 'twin.macro';
 import { useLocation } from 'wouter';
 import logo from './icons/paradao-icon.svg';
@@ -8,23 +8,26 @@ import { useMobile } from '@utils/responsive';
 import { SearchIcon, MenuIcon, WalletIcon } from '@icons/mui';
 import { usePolkadot } from '@context/polkadot';
 import LightButton from './Button/LightButton';
+import WalletModal from '@components/WalletModal';
 
 const ScreenContainer = tw.main`h-screen flex flex-col`;
 const ContentContainer = tw.div`p-6 flex flex-col flex-1 justify-start items-start bg-blue-50 overflow-y-auto`;
 
 const Layout: FC<PropsWithChildren> = ({ children: Component }) => {
   const isMobile = useMobile();
+  const [ showWalletModal, setShowWalletModal ] = useState<boolean>(false);
 
   return (
     <ScreenContainer>
       <div tw="flex flex-1 overflow-hidden">
         {/* TODO  mobile menu */}
-        {!isMobile && <Sidebar />}
+        {!isMobile && <Sidebar showModal={ () => setShowWalletModal(true) } />}
         <div tw="flex flex-1 flex-col">
           {/* <Header /> */}
           <ContentContainer>
             <Breadcrumbs />
             <main className="w-full my-0 mx-auto">{Component}</main>
+            <WalletModal isOpened={ showWalletModal } onClose={ () => setShowWalletModal(false) } />
           </ContentContainer>
         </div>
       </div>

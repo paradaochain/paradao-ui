@@ -14,17 +14,17 @@ const SideBarContainer = tw.div`overflow-y-auto py-4 px-3 bg-gray-50 rounded h-f
 const SideBarTxt = tw.span`ml-3 text-blue-900`;
 const SideAddress = tw.p`text-sm text-center`;
 
-const LayoutSidebar: FC = () => {
+const LayoutSidebar: FC<{ showModal: () => void }> = ({ showModal }) => {
   return (
     <div tw="flex width[fit-content]">
-      <Sidebar />
+      <Sidebar showModal={showModal}/>
     </div>
   );
 };
 
 export default LayoutSidebar;
 
-const Sidebar: FC = () => {
+const Sidebar: FC<{ showModal: () => void }> = ({ showModal }) => {
   const [, setLocation] = useLocation();
   const { loadWallet, address, disconnectWallet } = usePolkadot();
 
@@ -54,7 +54,7 @@ const Sidebar: FC = () => {
           {address ? (
             <LightButton onClick={disconnectWallet}>Disconnect</LightButton>
           ) : (
-            <LightButton onClick={loadWallet}>Connect Wallet</LightButton>
+            <LightButton onClick={showModal}>Connect Wallet</LightButton>
           )}
           {address && <SideAddress>Address: {IntlAddress(address, 20)}</SideAddress>}
         </div>
