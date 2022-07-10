@@ -17,11 +17,18 @@ export class DAOService extends ContractPromise {
     this._address = address;
   }
 
-  async info() {
+  async info(): Promise<Record<string, string | number | object | unknown>> {
     const { output } = await this.query.info('', {});
-    if (!output) return null;
-    const { metadataUrl, ...info } = output.toJSON() as { metadataUrl: string };
+    if (!output) throw new Error('there was an error fetch dao info');
+    const { metadataUrl, ...info } = output.toJSON() as Record<string, string>;
+    if (metadataUrl.length < 20) return info;
     return { ...info, metadata: await getMetadata(metadataUrl) };
+  }
+
+  async getBalance() {
+    const result = await this.api.query.system.account(this.address);
+    const parsedResult = result.toJSON() as Record<string, Record<string, string>>;
+    return parsedResult.data.free;
   }
 
   async proposalInfo(proposalId: number) {
@@ -42,8 +49,8 @@ export class DAOService extends ContractPromise {
     return output.toJSON() as number;
   }
 
-  async totalProposal(): Promise<number | null> {
-    const { output } = await this.query.totalProposal('', {});
+  async totalProposals(): Promise<number | null> {
+    const { output } = await this.query.totalProposals('', {});
     if (!output) return null;
     return output.toJSON() as number;
   }

@@ -4,10 +4,10 @@ import { useLocation } from 'wouter';
 import logo from './paradao-icon.svg';
 import Sidebar from '@components/Sidebar';
 import Breadcrumbs from '@components/Breadcrumbs';
-import Button from '@components/Button/Button';
 import { useMobile } from '@utils/responsive';
 import { SearchIcon, MenuIcon, WalletIcon } from '@icons/mui';
 import { usePolkadot } from '@context/polkadot';
+import LightButton from './Button/LightButton';
 
 const ScreenContainer = tw.main`h-screen flex flex-col`;
 const ContentContainer = tw.div`p-6 flex flex-col flex-1 justify-start items-start bg-blue-50 overflow-y-auto`;
@@ -80,13 +80,7 @@ const Header: FC = () => {
         </div>
         <div tw="hidden justify-between items-center w-full md:flex md:w-auto md:order-1">
           <NavContentContainer>
-            {address ? (
-              <p>{address}</p>
-            ) : (
-              <Button color="light" onClick={loadWallet}>
-                Connect Wallet
-              </Button>
-            )}
+            {address ? <p>{address}</p> : <LightButton onClick={loadWallet}>Connect Wallet</LightButton>}
           </NavContentContainer>
         </div>
       </div>

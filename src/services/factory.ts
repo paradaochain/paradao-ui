@@ -34,7 +34,6 @@ export class FactoryService extends ContractPromise {
     const metadataUrl = await uploadMetada(metadata);
     const index = await this.getNextIndex();
     if (!index || !metadataUrl) throw new Error('Something went wrong');
-    console.log(this._address);
     await this.tx
       .createDao({ storageDepositLimit, gasLimit }, name, metadataUrl, daoType, fee, null, +index)
       .signAndSend(this._address as string);

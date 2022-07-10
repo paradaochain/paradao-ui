@@ -36,7 +36,7 @@ const Breadcrumbs: FC = () => {
               //   );
               // } else {
               return (
-                <li key={ `${loc}-${i}` }>
+                <li key={`${loc}-${i}`}>
                   <div tw="flex items-center">
                     <NextCrumb />
                     <BcBtn tw="ml-1 md:ml-2" onClick={() => setLocation(loc)}>

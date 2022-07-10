@@ -1,13 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { usePolkadot } from '@context/polkadot';
-import { daoList } from '@views/fakeData';
 import Button from '@components/Button/Button';
 import tw from 'twin.macro';
+import { DAOService } from '@services/dao';
 
 const AllDaos: React.FC = () => {
   const [, setLocation] = useLocation();
-  const { factoryService } = usePolkadot();
+  const [daos, setDaos] = useState<DaoProps[]>([]);
+  const { api, factoryService } = usePolkadot();
+
+  useEffect(() => {
+    const loadDaos = async () => {
+      const daosAddresses = await factoryService.getDaos();
+      if (!daosAddresses) return;
+      const daos = await Promise.all(
+        daosAddresses.map(async (address) => {
+          const service = new DAOService(api, address);
+          const { metadata, ...info } = await service.info();
+          const members = await service.totalMembers();
+          const totalProposals = await service.totalProposals();
+          const funds = await service.getBalance();
+          return { ...info, ...metadata, daoAddress: address, members, totalProposals, funds };
+        })
+      );
+      setDaos(daos);
+    };
+    loadDaos();
+  }, []);
 
   return (
     <div tw="ml-4 my-8 space-y-8 flex flex-col justify-center items-start">
@@ -17,8 +37,8 @@ const AllDaos: React.FC = () => {
       </div>
       <Button onClick={() => factoryService.getNextIndex().then(console.log)}>Test Get DAOs</Button>
       <div tw="flex flex-wrap justify-center items-center h-full w-full overflow-auto">
-        {daoList.map((dao, i) => (
-          <DaoCard key={`${dao.token}${i}`} {...dao} />
+        {daos.map((dao, i) => (
+          <DaoCard key={`${dao.name}${i}`} {...dao} />
         ))}
       </div>
     </div>
@@ -35,7 +55,6 @@ type DaoProps = {
   logo: string;
   funds: string;
   members: number;
-  activeProposals: number;
   totalProposals: number;
   links?: Record<string, unknown>;
 };
@@ -49,7 +68,7 @@ const CardStatTitle = tw.p`text-xs font-bold text-gray-400 tracking-tight`;
 const CardStatData = tw.p`text-lg font-bold text-gray-800 tracking-wider`;
 const CardProposals = tw.div`flex flex-col w-full justify-center items-center`;
 
-const DaoCard: React.FC<DaoProps> = ({ name, daoAddress, descrip, logo, funds, members, activeProposals, totalProposals }) => {
+const DaoCard: React.FC<DaoProps> = ({ name, daoAddress, descrip, logo, funds, members, totalProposals }) => {
   const [, setLocation] = useLocation();
   return (
     <CardContainer onClick={() => setLocation('/dao-detail')}>
@@ -78,10 +97,9 @@ const DaoCard: React.FC<DaoProps> = ({ name, daoAddress, descrip, logo, funds, m
         </CardStats>
         <CardProposals>
           <p tw="tracking-widest text-xl">
-            <span tw="font-bold">{activeProposals}</span>
-            {` active proposal${activeProposals === 0 || activeProposals > 1 ? 's' : ''}`}
+            <span tw="font-bold">Proposals</span>
           </p>
-          <CardStatTitle>{`${totalProposals} proposal${totalProposals === 0 || (totalProposals > 1 && 's')} in total`}</CardStatTitle>
+          <CardStatTitle>{`${totalProposals} in total`}</CardStatTitle>
         </CardProposals>
       </div>
     </CardContainer>

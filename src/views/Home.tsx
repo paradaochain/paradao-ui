@@ -1,18 +1,18 @@
-import React, { FC,  useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import tw from 'twin.macro';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Text } from '@polkadot/types';
 
 type TestTypes = {
-  chain: Text, 
-  nodeName: Text, 
-  nodeVersion: Text
-}
+  chain: Text;
+  nodeName: Text;
+  nodeVersion: Text;
+};
 
 const Home: React.FC = () => {
-  const [ api, setApi ] = useState<TestTypes>();
+  const [api, setApi] = useState<TestTypes>();
 
-  async function traverseEvents () {
+  async function traverseEvents() {
     // Create our API with a default connection to the local node
     const api = await ApiPromise.create();
 
@@ -32,7 +32,7 @@ const Home: React.FC = () => {
         console.log(`\t\t${event.meta.documentation.toString()}`);
 
         // Loop through each of the parameters, displaying the type and data
-        event.data.forEach((data: { toString: () => any; }, index: string | number) => {
+        event.data.forEach((data: { toString: () => any }, index: string | number) => {
           console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
         });
       });
@@ -45,7 +45,6 @@ const Home: React.FC = () => {
   //     process.exit(-1);
   //   });
   // }, [traverseEvents]);
-
 
   // useEffect(() => {
   //   const getApi = async (): Promise<void> => {
@@ -80,12 +79,13 @@ const Home: React.FC = () => {
   return (
     <div>
       <h1 tw="mt-12 text-4xl text-gray-700">Welcome to Para Dao!</h1>
-      { api && Object.keys(api).length > 0 && 
+      {api && Object.keys(api).length > 0 && (
         <div tw="mt-12 space-y-2">
-          <p>{ `${api.chain}` }</p>
-          <p>{ `${api.nodeName}` }</p>
-          <p>{ `${api.nodeVersion}` }</p>
-        </div> }
+          <p>{`${api.chain}`}</p>
+          <p>{`${api.nodeName}`}</p>
+          <p>{`${api.nodeVersion}`}</p>
+        </div>
+      )}
     </div>
   );
 };

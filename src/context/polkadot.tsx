@@ -10,9 +10,13 @@ interface PolkadotContextState {
   loadWallet: () => Promise<void>;
 }
 
+interface Props {
+  fallback: React.ReactElement;
+}
+
 export const PolakdotContext = createContext<PolkadotContextState | null>(null);
 
-const PolkadorProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
+const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallback }) => {
   const [api, setApi] = useState<ApiPromise | null>(null);
   const [factoryService, setFactoryService] = useState<FactoryService | null>(null);
   const [address, setAddress] = useState<string | null>(null);
@@ -33,6 +37,8 @@ const PolkadorProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
       setFactoryService(new FactoryService(api));
     });
   }, []);
+
+  if (!api?.isConnected) return fallback;
 
   return (
     <PolakdotContext.Provider value={{ api, factoryService, loadWallet, address } as PolkadotContextState}>{children}</PolakdotContext.Provider>
