@@ -1,10 +1,9 @@
 import Input from '@components/Input/Input';
-import React, { useState } from 'react';
+import React from 'react';
 import * as yup from 'yup';
-import tw from 'twin.macro';
 import { useLocation } from 'wouter';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler, useForm, useController } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
 import Dropdown from '@components/Dropdown/Dropdown';
 import InputSubmit from '@components/Input/InputSubmit';
@@ -52,7 +51,6 @@ const Create: React.FC = () => {
   const { register, handleSubmit, formState, setValue, watch } = useForm<CreateDaoInputs>({});
   const { factoryService } = usePolkadot();
   const { errors, isSubmitting } = formState;
-  const [isCreating, setIsCreating] = useState<boolean>(false);
   const [, setLocation] = useLocation();
   const type = watch('type');
 
@@ -60,15 +58,12 @@ const Create: React.FC = () => {
   const setLogo = (logo: string) => setValue('logo', logo);
 
   const onSubmit: SubmitHandler<CreateDaoInputs> = async ({ name, type, fee, ...metadata }) => {
-    setIsCreating(true);
     try {
       const daoAddr = await factoryService.createDao(name, metadata, type, fee);
-      setIsCreating(false);
       setLocation(`/dao/${daoAddr}`);
     } catch (e) {
       // display err
       console.log(e);
-      setIsCreating(false);
     }
   };
 
@@ -90,7 +85,7 @@ const Create: React.FC = () => {
           <Dropdown options={typeOptions}>{type === null ? 'Type...' : displayType}</Dropdown>
         </div>
         <div className="w-full">
-          <TextArea label="Purpose" />
+          <TextArea label="Purpose" {...register('purpose')} error={errors.purpose?.message} />
         </div>
         <div className="grid grid-cols-4">
           <InputIcon type="text" placeholder="Website" {...register('links.website')} error={errors.links?.website} icon={<BiWorld />} />
@@ -106,8 +101,8 @@ const Create: React.FC = () => {
         </div>
         <div>
           <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
-            {isCreating ? 'Creating...' : 'Submit'}
-            {isCreating && <Spinner tw="ml-1" />}
+            {isSubmitting ? 'Creating...' : 'Submit'}
+            {isSubmitting && <Spinner tw="ml-1" />}
           </LightButton>
         </div>
       </form>

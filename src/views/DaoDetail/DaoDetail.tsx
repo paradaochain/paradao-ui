@@ -32,7 +32,8 @@ const DaoDetail: React.FC = () => {
     const loadDao = async () => {
       const daoService = new DAOService(api, params.daoAddress, address);
       setDaoService(daoService);
-      setDaoInfo(await daoService.getInfoPopulated());
+      const dao = await daoService.getInfoPopulated();
+      setDaoInfo(dao);
     };
     loadDao();
   }, [tsDaoChanged]);

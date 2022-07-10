@@ -35,41 +35,20 @@ export class FactoryService extends ContractPromise {
     const index = await this.getNextIndex();
 
     if (index === null || !metadataUrl) throw new Error('Something went wrong');
-    console.log(this._address);
 
-    let promiseResolve: (value: string) => void, promiseReject: (reason?: string) => void | undefined;
-    const addrPromise = new Promise((resolve, reject) => {
-      promiseResolve = resolve;
-      promiseReject = reject;
-      setTimeout(function () {
-        reject('create Dao timed out');
-      }, 120000); //120 secs.
-    });
-
-    try {
+    return await new Promise(async (resolve, reject) => {
+      setTimeout(reject, 80000);
       const unsubscribe = await this.tx
         .createDao({ storageDepositLimit, gasLimit }, name, metadataUrl, daoType, fee, null, +index)
         .signAndSend(this._address as string, (result) => {
           if (result.status.isInBlock) {
-            result.events.forEach(({ event: { data, method, section }, phase }) => {
+            result.events.forEach(({ event: { data, method, section } }) => {
               // console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
-              if (section == 'contracts' && method == 'Instantiated') {
-                promiseResolve(data[1].toString());
-              }
+              if (section == 'contracts' && method == 'Instantiated') resolve(data[1].toString());
             });
-          } else if (result.status.isFinalized) {
-            console.log('dao create finalized ');
-            unsubscribe();
-          } else if (result.isError) {
-            promiseReject(result.status.toString());
-          }
+          } else if (result.status.isFinalized) unsubscribe();
+          else if (result.isError) reject(result.status.toString());
         });
-    } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      promiseReject!(e as string);
-    }
-
-    const addr = await addrPromise;
-    return addr as string;
+    });
   }
 }
