@@ -84,7 +84,7 @@ export class DAOService extends ContractPromise {
         .signAndSend(this._address as string, (result) => {
           if (result.status.isInBlock) {
             result.events.forEach(({ event: { data, method, section }, phase }) => {
-              console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
+              // console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
               if (method.toLowerCase().includes('fail')) {
                 reject(`${method}`);
                 console.log(' ~ FAILED TO JOIN DAO ~', `${phase.toString()} : ${method} --> ${data.toString()}`);

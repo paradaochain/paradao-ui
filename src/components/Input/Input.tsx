@@ -31,10 +31,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ name, error, typ
         type={type}
         ref={ref}
         {...props}
-        className="bg-transparent px-2 py-1 outline-none transition-all delay-75 border-b border-purple-600 relative z-[1] focus:shadow-md"
+        className="w-full bg-transparent px-2 py-1 outline-none transition-all delay-75 border-b border-purple-600 relative z-[1] focus:shadow-md"
         css={InputStyle}
       />
-      <label htmlFor={name} className="absolute left-2 bottom-1 transition-all delay-75">
+      <label htmlFor={name} className="absolute left-2 bottom-1 transition-all delay-75 text-gray-600">
         {placeholder}
       </label>
       {error && <span className="text-xs text-red-500 absolute left-0 bottom-[-1rem]">{error.message}</span>}

@@ -4,7 +4,7 @@ import WRoute from '@components/WRoute';
 
 /* const Home = lazy(() => import('@views/Home')); */
 const Create = lazy(() => import('@views/Create'));
-const AllDaos = lazy(() => import('@views/AllDaos'));
+const AllDaos = lazy(() => import('@views/AllDaos/AllDaos'));
 const DaoDetail = lazy(() => import('@views/DaoDetail/DaoDetail'));
 
 const AppRouter: React.FC = () => {

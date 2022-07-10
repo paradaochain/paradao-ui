@@ -11,7 +11,7 @@ interface TextArea {
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps & TextArea>(({ className, label, error, ...props }, ref) => {
   return (
     <div className="flex flex-col w-full mb-8  relative ">
-      <label className="text-purple-700 font-semibold text-xs mb-1">{label && label}</label>
+      <label className="text-gray-600 font-semibold text-xs mb-1">{label && label}</label>
       <textarea
         ref={ref}
         className={clsx(

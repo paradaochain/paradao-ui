@@ -41,7 +41,7 @@ export class FactoryService extends ContractPromise {
         .createDao({ storageDepositLimit, gasLimit }, name, metadataUrl, daoType, fee, null, +index)
         .signAndSend(this._address as string, (result) => {
           if (result.status.isInBlock) {
-            result.events.forEach(({ event: { data, method, section }, phase }) => {
+            result.events.forEach(({ event: { data, method, section } }) => {
               // console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
               if (section == 'contracts' && method == 'Instantiated') {
                 resolve(data[1].toString());

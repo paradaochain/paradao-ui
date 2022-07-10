@@ -34,8 +34,8 @@ const InputStyle = css`
 const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
   ({ name, error, type, placeholder, className, icon, position = 'left', ...props }, ref) => {
     return (
-      <div className={clsx('relative mb-6 h-fit', className)} css={DivStyle}>
-        <div className={clsx('absolute bottom-1 w-4', position === 'left' && 'left-2', position === 'right' && 'right-2')}>{icon}</div>
+      <div className={clsx('relative mb-6 h-fit w-full', className)} css={DivStyle}>
+        <div className={clsx('absolute bottom-1 w-4 ', position === 'left' && 'left-2', position === 'right' && 'right-2')}>{icon}</div>
         <input
           placeholder={placeholder}
           name={name}
@@ -43,7 +43,7 @@ const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
           ref={ref}
           {...props}
           className={clsx(
-            'bg-transparent px-2 py-1 outline-none transition-all delay-75 border-b border-purple-600 relative z-[1] focus:shadow-md',
+            'bg-transparent px-2 py-1 outline-none transition-all delay-75 border-b border-purple-600 relative z-[1] focus:shadow-md w-full',
             position === 'left' && 'indent-7'
           )}
           css={InputStyle}
