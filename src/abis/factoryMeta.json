@@ -1,8 +1,8 @@
 {
   "source": {
-    "hash": "0xf6bfb0cc2d653f6e16448411bdf0727194546dc945625d6efa8b8a99e0a76276",
+    "hash": "0x12fe59fee189964e83815a1585dc8615ac4b052f1a0b8339d19e5460347924a0",
     "language": "ink! 3.3.0",
-    "compiler": "rustc 1.64.0-nightly"
+    "compiler": "rustc 1.62.0-nightly"
   },
   "contract": {
     "name": "factory",
@@ -16,15 +16,6 @@
       "constructors": [
         {
           "args": [
-            {
-              "label": "next_index",
-              "type": {
-                "displayName": [
-                  "u32"
-                ],
-                "type": 0
-              }
-            },
             {
               "label": "dao_contract_hash",
               "type": {
@@ -42,7 +33,42 @@
         }
       ],
       "docs": [],
-      "events": [],
+      "events": [
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "addr",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 5
+              }
+            }
+          ],
+          "docs": [],
+          "label": "DaoCreated"
+        },
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "new_code_hash",
+              "type": {
+                "displayName": [
+                  "Hash"
+                ],
+                "type": 1
+              }
+            }
+          ],
+          "docs": [],
+          "label": "CodeHashUpdated"
+        }
+      ],
       "messages": [
         {
           "args": [
@@ -86,7 +112,7 @@
               "label": "init_members",
               "type": {
                 "displayName": [
-                  "Vec"
+                  "Option"
                 ],
                 "type": 8
               }
@@ -109,6 +135,25 @@
           "payable": false,
           "returnType": null,
           "selector": "0x0574fc7e"
+        },
+        {
+          "args": [
+            {
+              "label": "new_code_hash",
+              "type": {
+                "displayName": [
+                  "Hash"
+                ],
+                "type": 1
+              }
+            }
+          ],
+          "docs": [],
+          "label": "dev_update_code_hash",
+          "mutates": true,
+          "payable": false,
+          "returnType": null,
+          "selector": "0xc8657591"
         },
         {
           "args": [],
@@ -275,26 +320,59 @@
         "id": 8,
         "type": {
           "def": {
-            "sequence": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 9
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
               "type": 9
             }
-          }
+          ],
+          "path": [
+            "Option"
+          ]
         }
       },
       {
         "id": 9,
         "type": {
           "def": {
-            "tuple": [
-              5,
-              6,
-              10
-            ]
+            "sequence": {
+              "type": 10
+            }
           }
         }
       },
       {
         "id": 10,
+        "type": {
+          "def": {
+            "tuple": [
+              5,
+              6,
+              11
+            ]
+          }
+        }
+      },
+      {
+        "id": 11,
         "type": {
           "def": {
             "variant": {

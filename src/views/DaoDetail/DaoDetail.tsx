@@ -10,6 +10,7 @@ import DAO from '@interfaces/dao';
 import { HorizontalSpinner, WhiteSpinner } from '@components/Spinner/Spinner';
 import { ProposalStatus } from '@interfaces/ProposalStatus';
 import NewProposalModal from '@components/Modal/NewProposalModal';
+import NewPMModal from '@components/Modal/NewPMModal';
 import daoLogo from '../../components/icons/paradao-icon.svg';
 import SocialMediaIcons from './SocialMediaIcons/SocialMediaIcons';
 
@@ -23,6 +24,7 @@ const DaoDetail: React.FC = () => {
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [tsDaoChanged, setTsDaoChanged] = useState<number>(Date.now());
   const [addModalStatus, setAddModalStatus] = useState(false);
+  const [addPMModalStatus, setAddPMModalStatus] = useState(false);
 
   const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting), [proposals]);
 
@@ -137,24 +139,29 @@ const DaoDetail: React.FC = () => {
       <div className="grid grid-cols-3 w-full gap-5">
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">Treassury</h3>
+          <h3 className="font-bold text-md text-center">{daoInfo.funds} Para</h3>
           <div className="flex flex-col"></div>
         </div>
         <div className="bg-white rounded-md p-3">
-          <h3 className="font-bold text-xl text-center">More info</h3>
+          <h3 className="font-bold text-xl text-center">All Prediction Markets</h3>
+          <h3 className="font-bold text-md text-center">{daoInfo.totalPms} Para</h3>
         </div>
         <div className="bg-white rounded-md p-3">
-          <h3 className="font-bold text-xl text-center">Check All Proposals ({daoInfo.totalProposals})</h3>
+          <h3 className="font-bold text-xl text-center">All Proposals</h3>
+          <h3 className="font-bold text-md text-center">{daoInfo.totalProposals}</h3>
           <div className="flex flex-col"></div>
         </div>
       </div>
       <div className="w-full flex my-8 justify-between items-center">
         <h2 className="font-bold text-2xl">
-          Active Proposals <span className="bg-gray-200 p-2 rounded-full">{activeProposals?.length}</span>
+          Engagement <span className="bg-gray-200 p-2 rounded-full">{activeProposals?.length}</span>
         </h2>
+        <Button onClick={() => setAddPMModalStatus(true)}>New prediction market</Button>
         <Button onClick={() => setAddModalStatus(true)}>New proposal</Button>
       </div>
       {activeProposals && <ProposalList daoService={daoService} proposalList={activeProposals} />}
       <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} />
+      <NewPMModal status={addPMModalStatus} closeModal={() => setAddPMModalStatus(false)} />
     </div>
   );
 };

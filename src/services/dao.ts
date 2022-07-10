@@ -1,6 +1,7 @@
 import { ApiPromise } from '@polkadot/api';
 import { ContractPromise } from '@polkadot/api-contract';
 import { getMetadata, uploadMetada } from './ipfs';
+import { getItem, setItem } from './localStorage';
 import daoAbi from '@abis/daoMeta.json';
 import DAO from '@interfaces/dao';
 import { Proposal } from '@interfaces/Proposal';
@@ -34,7 +35,19 @@ export class DAOService extends ContractPromise {
     const totalProposals = await this.totalProposals();
     const funds = await this.getBalance();
     const formattedFunds = `${Number(funds) / fundsFormatter}`;
-    return { ...info, ...(metadata as object), address: this.address.toString(), members, totalProposals, funds: formattedFunds } as DAO;
+    let pms = getItem(this.address.toString());
+    if (pms == null) {
+      pms = { totalPms: 0, proposalPms: {} };
+    }
+    return {
+      ...info,
+      ...(metadata as object),
+      address: this.address.toString(),
+      members,
+      totalProposals,
+      funds: formattedFunds,
+      ...(pms as Object)
+    } as DAO;
   }
 
   async getBalance() {

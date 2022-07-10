@@ -1,8 +1,8 @@
 {
   "source": {
-    "hash": "0x17b0c8efe04883914c6c03f77f35dcef75ac3bffe3c26f1e60d4726ef7ad4dd2",
+    "hash": "0x79caa7904a584e1cbe2c02c450e86dda22a0b530e95c48df72be70631d231815",
     "language": "ink! 3.3.0",
-    "compiler": "rustc 1.64.0-nightly"
+    "compiler": "rustc 1.62.0-nightly"
   },
   "contract": {
     "name": "dao",
@@ -74,6 +74,56 @@
           "args": [
             {
               "docs": [],
+              "indexed": false,
+              "label": "name",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "metadata_url",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "joining_fee",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 1
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "ty",
+              "type": {
+                "displayName": [
+                  "DaoType"
+                ],
+                "type": 24
+              }
+            }
+          ],
+          "docs": [],
+          "label": "DaoCreated"
+        },
+        {
+          "args": [
+            {
+              "docs": [],
               "indexed": true,
               "label": "account",
               "type": {
@@ -82,10 +132,171 @@
                 ],
                 "type": 3
               }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "Role"
+                ],
+                "type": 7
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "total_count",
+              "type": {
+                "displayName": [
+                  "u32"
+                ],
+                "type": 9
+              }
             }
           ],
           "docs": [],
           "label": "Joined"
+        },
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "title",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "metadata_url",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "threshold",
+              "type": {
+                "displayName": [
+                  "u32"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "expires",
+              "type": {
+                "displayName": [
+                  "BlockNumber"
+                ],
+                "type": 9
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Proposed"
+        },
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "proposal_id",
+              "type": {
+                "displayName": [
+                  "ProposalId"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "voter",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "vote",
+              "type": {
+                "displayName": [
+                  "bool"
+                ],
+                "type": 23
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "proposal_status",
+              "type": {
+                "displayName": [
+                  "ProposalStatus"
+                ],
+                "type": 19
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Voted"
+        },
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "proposal_id",
+              "type": {
+                "displayName": [
+                  "ProposalId"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "block",
+              "type": {
+                "displayName": [
+                  "BlockNumber"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "proposal_type",
+              "type": {
+                "displayName": [
+                  "ProposalType"
+                ],
+                "type": 12
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Executed"
         }
       ],
       "messages": [
