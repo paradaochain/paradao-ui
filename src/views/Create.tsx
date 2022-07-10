@@ -1,6 +1,8 @@
 import Input from '@components/Input/Input';
 import React, { useState } from 'react';
 import * as yup from 'yup';
+import tw from 'twin.macro';
+import { useLocation } from 'wouter';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm, useController } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
@@ -11,6 +13,7 @@ import { BsDiscord } from 'react-icons/bs';
 import { BsInstagram } from 'react-icons/bs';
 import { BsYoutube } from 'react-icons/bs';
 import { BiWorld } from 'react-icons/bi';
+import Spinner from '@components/Spinner/Spinner';
 import LightButton from '@components/Button/LightButton';
 import { usePolkadot } from '@context/polkadot';
 interface CreateDaoInputs {
@@ -49,19 +52,31 @@ const Create: React.FC = () => {
   const { register, handleSubmit, formState, setValue, watch } = useForm<CreateDaoInputs>({});
   const { factoryService } = usePolkadot();
   const { errors, isSubmitting } = formState;
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [, setLocation] = useLocation();
   const type = watch('type');
 
   const setType = (type: boolean) => setValue('type', +type);
   const setLogo = (logo: string) => setValue('logo', logo);
 
+
   const onSubmit: SubmitHandler<CreateDaoInputs> = async ({ name, type, fee, ...metadata }) => {
-    await factoryService.createDao(name, metadata, type, fee);
+    setIsCreating(true);
+    try {
+      const daoAddr = await factoryService.createDao(name, metadata, type, fee);
+      setIsCreating(false);
+      setLocation(`/dao/${daoAddr}`);
+    } catch (e) {
+      // display err
+      console.log(e);
+      setIsCreating(false);
+    }
   };
 
-  const displayType = type ? 'Communitary' : 'SuperStar';
+  const displayType = type ? 'Community' : 'SuperStar';
   const typeOptions = [
     { name: 'SuperStar', click: () => setType(false) },
-    { name: 'Communitary', click: () => setType(true) }
+    { name: 'Community', click: () => setType(true) }
   ];
 
   return (
@@ -92,7 +107,8 @@ const Create: React.FC = () => {
         </div>
         <div>
           <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
-            {isSubmitting ? '...Loading' : 'Submit'}
+            { isCreating ? 'Creating...' : 'Submit' }
+            { isCreating && <Spinner tw="ml-1" /> }
           </LightButton>
         </div>
       </form>

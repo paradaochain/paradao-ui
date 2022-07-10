@@ -44,7 +44,7 @@ const AllDaos: React.FC = () => {
 
 export default AllDaos;
 
-const CardContainer = tw.div`block p-6 m-4 height[28rem] width[440px] bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100`;
+const CardContainer = tw.div`block p-6 m-4 height[28rem] width[440px] bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer`;
 const CardHeader = tw.div`flex flex-row justify-start items-start space-x-4 w-full`;
 const CardDescrip = tw.div`w-full`;
 const CardStats = tw.div`w-full flex flex-row justify-around`;
