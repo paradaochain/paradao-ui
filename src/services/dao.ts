@@ -7,6 +7,7 @@ import { Proposal } from '@interfaces/Proposal';
 
 const gasLimit = 300000n * 1000000n;
 const storageDepositLimit = null;
+const fundsFormatter = 10000000000.0;
 
 export class DAOService extends ContractPromise {
   private _address?: string;
@@ -32,7 +33,8 @@ export class DAOService extends ContractPromise {
     const members = await this.totalMembers();
     const totalProposals = await this.totalProposals();
     const funds = await this.getBalance();
-    return { ...info, ...(metadata as object), address: this.address.toString(), members, totalProposals, funds } as DAO;
+    const formattedFunds = `${Number(funds) / fundsFormatter}`;
+    return { ...info, ...(metadata as object), address: this.address.toString(), members, totalProposals, funds: formattedFunds } as DAO;
   }
 
   async getBalance() {
@@ -74,34 +76,29 @@ export class DAOService extends ContractPromise {
   }
 
   async join(did: string) {
-    let promiseResolve: (value: string) => void, promiseReject: (reason?: string) => void | undefined;
-    const joinPromise = new Promise((resolve, reject) => {
-      promiseResolve = resolve;
-      promiseReject = reject;
-      setTimeout(function () {
-        reject('joining Dao timed out');
-      }, 180000); //180 secs
+    const { fee, ...info } = await this.info();
+    return await new Promise(async (resolve, reject) => {
+      setTimeout(reject, 120000);
+      const unsubscribe = await this.tx
+        .join({ storageDepositLimit, gasLimit, value: (fee as number) * fundsFormatter }, did)
+        .signAndSend(this._address as string, (result) => {
+          if (result.status.isInBlock) {
+            result.events.forEach(({ event: { data, method, section }, phase }) => {
+              console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
+              if (method.toLowerCase().includes('fail')) {
+                reject(`${method}`);
+                console.log(' ~ FAILED TO JOIN DAO ~', `${phase.toString()} : ${method} --> ${data.toString()}`);
+              } else if (method.toLowerCase().includes('success')) {
+                resolve('dao joined');
+              }
+            });
+          } else if (result.status.isFinalized) {
+            unsubscribe();
+          } else if (result.isError) {
+            reject(result.status.toString());
+          }
+        });
     });
-    try {
-      const unsubscribe = await this.tx.join({ storageDepositLimit, gasLimit }, did).signAndSend(this._address as string, (result) => {
-        if (result.status.isInBlock) {
-          // result.events.forEach(({ event: { data, method, section }, phase }) => {
-          //   console.log("\t", phase.toString(), `: ${section}.${method}`, data.toString());
-          // });
-          promiseResolve('dao joined');
-          // console.log(JSON.stringify(result.contractEvents));
-        } else if (result.status.isFinalized) {
-          unsubscribe();
-        } else if (result.isError) {
-          promiseReject(result.status.toString());
-        }
-      });
-    } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      promiseReject!(e as string);
-    }
-    const confirmation = await joinPromise;
-    return confirmation as string;
   }
 
   async propose(proposalType: unknown, title: string, proposalMetadata: unknown) {

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import * as yup from 'yup';
 import tw from 'twin.macro';
 import { useLocation } from 'wouter';
+import toast, { Toaster } from 'react-hot-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm, useController } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
@@ -61,6 +62,10 @@ const Create: React.FC = () => {
 
   const onSubmit: SubmitHandler<CreateDaoInputs> = async ({ name, type, fee, ...metadata }) => {
     setIsCreating(true);
+    setTimeout(() => {
+      setIsCreating(false);
+      toast.error('Could not join now :( Try again?');
+    }, 120000);
     try {
       const daoAddr = await factoryService.createDao(name, metadata, type, fee);
       setIsCreating(false);
@@ -80,13 +85,15 @@ const Create: React.FC = () => {
 
   return (
     <div className="p-5 flex flex-col justify-center items-start w-full">
+      <Toaster position="top-center" reverseOrder={false} />
       <h1 className="mb-5 text-2xl text-blue-800">Create DAO</h1>
       <form className="max-w-[55rem] my-0 mx-auto bg-white rounded-lg px-3 py-8 w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-center justify-center h-[5rem] mb-2">
           <InputSubmit setLogo={setLogo} />
         </div>
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full mt-10">
           <Input type="text" placeholder="Dao Name" {...register('name')} error={errors.name} />
+          <Input type="number" placeholder="Fee to Join" {...register('fee')} error={errors.fee} />
           <Dropdown options={typeOptions}>{type === null ? 'Type...' : displayType}</Dropdown>
         </div>
         <div className="w-full">
@@ -105,7 +112,7 @@ const Create: React.FC = () => {
           <InputIcon type="text" placeholder="Youtube" {...register('links.youtube')} error={errors.links?.youtube} icon={<BsYoutube />} />
         </div>
         <div>
-          <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
+          <LightButton disabled={isCreating || (formState.errors && !formState.dirtyFields ? true : false)}>
             {isCreating ? 'Creating...' : 'Submit'}
             {isCreating && <Spinner tw="ml-1" />}
           </LightButton>

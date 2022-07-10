@@ -73,7 +73,11 @@ const DaoDetail: React.FC = () => {
   const handleJoin = () => {
     const callJoin = async () => {
       setIsJoining(true);
-      toast('Good things come to ppl who wait...');
+      setTimeout(() => {
+        setIsJoining(false);
+        toast.error('Could not join now :( Try again?');
+      }, 120000);
+      toast('Good things come to ppl who wait... Joining... :)');
       try {
         const confirm = await daoService.join(`did:${Math.random().toString()}`);
         setIsJoining(false);
@@ -138,7 +142,7 @@ const DaoDetail: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <Button onClick={handleJoin}>
+          <Button onClick={handleJoin} disabled={isJoining}>
             {isJoining ? 'Joining...' : 'Join'}
             {isJoining && <Spinner tw="ml-1" />}
           </Button>
