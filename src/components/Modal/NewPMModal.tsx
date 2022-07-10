@@ -10,10 +10,7 @@ export interface IModalOptions {
   closeModal: () => void;
 }
 
-
-
 const NewPMModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, closeModal }) => {
-
   return (
     <Modal status={status} closeModal={closeModal}>
       <div>

@@ -8,10 +8,10 @@ import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
 
 interface PMForm {
-		question: string;
-		description: string;
-		assetNames: string[];
-		assetTickers: string[];
+  question: string;
+  description: string;
+  assetNames: string[];
+  assetTickers: string[];
 }
 
 const resolver = yupResolver(
@@ -32,20 +32,20 @@ const PMForm: React.FC = () => {
     console.log(metadata);
   };
   return (
-		<form className="flex flex-col w-full" >
-    	  <div className="grid ">
-    	    <Input type="text" placeholder="Question" {...register('question')} error={errors.question} />
-    	    <Input type="text" placeholder="Description" {...register('description')} error={errors.description} />
-    	  </div>
-    	  <div className="grid grid-cols-2 gap-5">
-    	    <Input type="text" placeholder="Asset Name" {...register('assetNames')} error={errors.question} />
-    	    <Input type="text" placeholder="Asset Ticker" {...register('assetTickers')} error={errors.description} />
-    	  </div>
-    	  <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
-    	    {isSubmitting ? 'Creating...' : 'Submit'}
-    	    {isSubmitting && <Spinner tw="ml-1" />}
-    	  </LightButton>
-    	</form>
+    <form className="flex flex-col w-full">
+      <div className="grid ">
+        <Input type="text" placeholder="Question" {...register('question')} error={errors.question} />
+        <Input type="text" placeholder="Description" {...register('description')} error={errors.description} />
+      </div>
+      <div className="grid grid-cols-2 gap-5">
+        <Input type="text" placeholder="Asset Name" {...register('assetNames')} error={errors.question} />
+        <Input type="text" placeholder="Asset Ticker" {...register('assetTickers')} error={errors.description} />
+      </div>
+      <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
+        {isSubmitting ? 'Creating...' : 'Submit'}
+        {isSubmitting && <Spinner tw="ml-1" />}
+      </LightButton>
+    </form>
   );
 };
 
