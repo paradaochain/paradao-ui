@@ -88,7 +88,8 @@ export const usePolkadot = () => {
 };
 
 const loadApi = async () => {
-  const provider = new WsProvider('ws://127.0.0.1:9944');
+  const ws_url = import.meta.env.WS_URL;
+  const provider = new WsProvider(ws_url);
   return await ApiPromise.create({
     provider,
     types: {
