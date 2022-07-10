@@ -43,7 +43,7 @@ export class FactoryService extends ContractPromise {
       promiseReject = reject;
       setTimeout(function () {
         reject('create Dao timed out');
-      }, 45000); //45 secs, super long. should take ~10-15 sec? but if need to sign in to wallet...
+      }, 120000); //120 secs.
     });
 
     try {

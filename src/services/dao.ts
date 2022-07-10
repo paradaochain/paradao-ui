@@ -2,7 +2,7 @@ import { ApiPromise } from '@polkadot/api';
 import { ContractPromise } from '@polkadot/api-contract';
 import { getMetadata, uploadMetada } from './ipfs';
 import daoAbi from '@abis/daoMeta.json';
-import DAO from '@interfaces/Dao';
+import DAO from '@interfaces/dao';
 import { Proposal } from '@interfaces/Proposal';
 
 const gasLimit = 300000n * 1000000n;
@@ -74,7 +74,34 @@ export class DAOService extends ContractPromise {
   }
 
   async join(did: string) {
-    await this.tx.join({ storageDepositLimit, gasLimit }, did).signAndSend(this._address as string);
+    let promiseResolve: (value: string) => void, promiseReject: (reason?: string) => void | undefined;
+    const joinPromise = new Promise((resolve, reject) => {
+      promiseResolve = resolve;
+      promiseReject = reject;
+      setTimeout(function () {
+        reject('joining Dao timed out');
+      }, 180000); //180 secs
+    });
+    try {
+      const unsubscribe = await this.tx.join({ storageDepositLimit, gasLimit }, did).signAndSend(this._address as string, (result) => {
+        if (result.status.isInBlock) {
+          // result.events.forEach(({ event: { data, method, section }, phase }) => {
+          //   console.log("\t", phase.toString(), `: ${section}.${method}`, data.toString());
+          // });
+          promiseResolve('dao joined');
+          // console.log(JSON.stringify(result.contractEvents));
+        } else if (result.status.isFinalized) {
+          unsubscribe();
+        } else if (result.isError) {
+          promiseReject(result.status.toString());
+        }
+      });
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      promiseReject!(e as string);
+    }
+    const confirmation = await joinPromise;
+    return confirmation as string;
   }
 
   async propose(proposalType: unknown, title: string, proposalMetadata: unknown) {

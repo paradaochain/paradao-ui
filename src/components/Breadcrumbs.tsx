@@ -25,26 +25,26 @@ const Breadcrumbs: FC = () => {
           crumbs.map((loc, i) => {
             // console.log('ummm', crumbs, location);
             if (loc === 'dao') {
-                return (
-                  <li aria-current="page">
-                    <div tw="flex items-center">
-                      < NextCrumb />
-                      <BcSpan>{ loc }</BcSpan>
-                    </div>
-                  </li>
-                );
+              return (
+                <li key={`${loc}-${i}`}>
+                  <div tw="flex items-center">
+                    <NextCrumb />
+                    <BcSpan>{loc}</BcSpan>
+                  </div>
+                </li>
+              );
             } else {
-                return (
-                  <li key={`${loc}-${i}`}>
-                    <div tw="flex items-center">
-                      <NextCrumb />
-                      <BcBtn tw="ml-1 md:ml-2" onClick={() => setLocation(loc)}>
-                        {' '}
-                        {loc.replace('-', ' ')}
-                      </BcBtn>
-                    </div>
-                  </li>
-                );
+              return (
+                <li key={`${loc}-${i}`}>
+                  <div tw="flex items-center">
+                    <NextCrumb />
+                    <BcBtn tw="ml-1 md:ml-2" onClick={() => setLocation(loc)}>
+                      {' '}
+                      {loc.replace('-', ' ')}
+                    </BcBtn>
+                  </div>
+                </li>
+              );
             }
           })}
       </ol>

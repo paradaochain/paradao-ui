@@ -59,7 +59,6 @@ const Create: React.FC = () => {
   const setType = (type: boolean) => setValue('type', +type);
   const setLogo = (logo: string) => setValue('logo', logo);
 
-
   const onSubmit: SubmitHandler<CreateDaoInputs> = async ({ name, type, fee, ...metadata }) => {
     setIsCreating(true);
     try {
@@ -107,8 +106,8 @@ const Create: React.FC = () => {
         </div>
         <div>
           <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
-            { isCreating ? 'Creating...' : 'Submit' }
-            { isCreating && <Spinner tw="ml-1" /> }
+            {isCreating ? 'Creating...' : 'Submit'}
+            {isCreating && <Spinner tw="ml-1" />}
           </LightButton>
         </div>
       </form>

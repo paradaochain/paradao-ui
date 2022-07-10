@@ -4,12 +4,14 @@ import { usePolkadot } from '@context/polkadot';
 import Button from '@components/Button/Button';
 import tw from 'twin.macro';
 import { DAOService } from '@services/dao';
-import DAO from '@interfaces/Dao';
+import DAO from '@interfaces/dao';
 import { IntlAddress } from '@utils/Intl';
+import Spinner from '@components/Spinner/Spinner';
 
 const AllDaos: React.FC = () => {
   const [, setLocation] = useLocation();
   const [daos, setDaos] = useState<DAO[]>([]);
+  const [isloading, setIsLoading] = useState<boolean>(false);
   const { api, factoryService } = usePolkadot();
 
   useEffect(() => {
@@ -24,7 +26,9 @@ const AllDaos: React.FC = () => {
       );
       setDaos(daos);
     };
+    setIsLoading(true);
     loadDaos();
+    setIsLoading(false);
   }, []);
 
   return (
@@ -37,6 +41,12 @@ const AllDaos: React.FC = () => {
         {daos.map((dao, i) => (
           <DaoCard key={`${dao.name}${i}`} {...dao} />
         ))}
+        {isloading && (
+          <h2>
+            Getting Daos...
+            <Spinner />
+          </h2>
+        )}
       </div>
     </div>
   );

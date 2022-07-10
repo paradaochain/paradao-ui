@@ -1,5 +1,6 @@
 import Button from '@components/Button/Button';
 import React, { useEffect, useMemo, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { BsDiscord } from 'react-icons/bs';
 import { BsInstagram } from 'react-icons/bs';
 import { BsYoutube } from 'react-icons/bs';
@@ -9,8 +10,10 @@ import { ProposalWithId } from '@interfaces/Proposal';
 import { useLocation, useRoute } from 'wouter';
 import { DAOService } from '@services/dao';
 import { usePolkadot } from '@context/polkadot';
-import DAO from '@interfaces/Dao';
+import DAO from '@interfaces/dao';
+import { HorizontalSpinner } from '@components/Spinner/Spinner';
 import { ProposalStatus } from '@interfaces/ProposalStatus';
+import Spinner from '@components/Spinner/Spinner';
 
 const DaoDetail: React.FC = () => {
   const [, params] = useRoute('/dao/:daoAddress');
@@ -19,6 +22,8 @@ const DaoDetail: React.FC = () => {
   const [daoInfo, setDaoInfo] = useState<DAO | null>(null);
   const [daoService, setDaoService] = useState<DAOService | null>(null);
   const [proposals, setProposals] = useState<ProposalWithId[]>();
+  const [isJoining, setIsJoining] = useState<boolean>(false);
+  const [tsDaoChanged, setTsDaoChanged] = useState<number>(Date.now());
 
   const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting), [proposals]);
 
@@ -30,7 +35,7 @@ const DaoDetail: React.FC = () => {
       setDaoInfo(await daoService.getInfoPopulated());
     };
     loadDao();
-  }, []);
+  }, [tsDaoChanged]);
 
   useEffect(() => {
     if (!daoService || !address) return;
@@ -56,10 +61,37 @@ const DaoDetail: React.FC = () => {
     loadProposals();
   }, [daoInfo, daoService]);
 
-  if (!daoInfo || !daoService) return <p>...loading</p>;
+  if (!daoInfo || !daoService)
+    return (
+      <div tw="flex w-full h-full justify-center items-center">
+        <p>
+          ...loading <HorizontalSpinner />
+        </p>
+      </div>
+    );
+
+  const handleJoin = () => {
+    const callJoin = async () => {
+      setIsJoining(true);
+      toast('Good things come to ppl who wait...');
+      try {
+        const confirm = await daoService.join(`did:${Math.random().toString()}`);
+        setIsJoining(false);
+        toast.success('Successfully joined!');
+        setTsDaoChanged(Date.now());
+      } catch (e) {
+        // display err
+        console.log(e);
+        setIsJoining(false);
+        toast.error(`Could not join ${e}`);
+      }
+    };
+    callJoin();
+  };
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-full p-5 relative">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-lg w-full flex">
         <div className="max-w-[8rem]">
           <img className="w-full rounded-full" src={daoInfo.logo} />
@@ -82,22 +114,22 @@ const DaoDetail: React.FC = () => {
               <p className="text-xs text-gray-500 w-full">Social Links</p>
               <div className="flex  items-center justify-center gap-5">
                 {daoInfo.links?.website && (
-                  <a href={daoInfo.links.website}>
+                  <a href={daoInfo.links.website} target="_blank" rel="noopener noreferrer">
                     <BiWorld className=" w-5 h-5  text-purple-900 hover:text-purple-500" />
                   </a>
                 )}
                 {daoInfo.links?.instagram && (
-                  <a href={daoInfo.links.instagram}>
+                  <a href={daoInfo.links.instagram} target="_blank" rel="noopener noreferrer">
                     <BsInstagram className=" w-5 h-5  text-purple-900 hover:text-purple-500" />
                   </a>
                 )}
                 {daoInfo.links?.youtube && (
-                  <a href={daoInfo.links.instagram}>
+                  <a href={daoInfo.links.instagram} target="_blank" rel="noopener noreferrer">
                     <BsYoutube className=" w-5 h-5  text-purple-900 hover:text-purple-500" />
                   </a>
                 )}
                 {daoInfo.links?.discord && (
-                  <a href={daoInfo.links.discord}>
+                  <a href={daoInfo.links.discord} target="_blank" rel="noopener noreferrer">
                     <BsDiscord className=" w-5 h-5  text-purple-900 hover:text-purple-500" />
                   </a>
                 )}
@@ -106,7 +138,10 @@ const DaoDetail: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <Button onClick={() => daoService.join(`did:${Math.random().toString()}`)}>Join</Button>
+          <Button onClick={handleJoin}>
+            {isJoining ? 'Joining...' : 'Join'}
+            {isJoining && <Spinner tw="ml-1" />}
+          </Button>
         </div>
       </div>
       <div className="p-5 my-5 bg-white w-full rounded-lg">
