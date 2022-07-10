@@ -15,7 +15,7 @@ const AllDaos: React.FC = () => {
         <h1 tw="ml-2 text-2xl text-blue-800">All DAOs</h1>
         <Button onClick={() => setLocation('/create')}>Create a new DAO</Button>
       </div>
-      <Button onClick={() => factoryService.getNextIndex().then(console.log)}>Test Get DAOs</Button>
+      <Button onClick={() => factoryService.getDaos().then(console.log)}>Test Get DAOs</Button>
       <div tw="flex flex-wrap justify-center items-center h-full w-full overflow-auto">
         {daoList.map((dao, i) => (
           <DaoCard key={`${dao.token}${i}`} {...dao} />

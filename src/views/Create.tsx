@@ -1,8 +1,10 @@
 import React, { FC, PropsWithChildren, useRef, useState } from 'react';
 import tw from 'twin.macro';
+import { useLocation } from 'wouter';
 import { CircleComplete, CircleOutline, Next } from '@icons/mui';
 import Button from '@components/Button/Button';
 import { usePolkadot } from '@context/polkadot';
+import Spinner from '@components/Spinner/Spinner';
 
 type Sections = 'DaoInfo' | 'Links' | 'Members' | 'Voting';
 
@@ -96,11 +98,25 @@ const AdminCheckLabel = tw.label`ml-2 text-sm font-medium text-gray-500`;
 
 const DaoInfoFormSection: FC<{ formRef: React.RefObject<HTMLFormElement> }> = ({ formRef }) => {
   const { factoryService } = usePolkadot();
+  const [, setLocation] = useLocation();
+  const [isCreating, setIsCreating] = useState<boolean>(false);
   const createDao = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    // TODO check has wallet address before creating!
     if (!formRef.current) return;
     e.preventDefault();
+    setIsCreating(true);
     const { name, type, fee, ...metadata } = Object.fromEntries(new FormData(formRef.current).entries());
-    await factoryService.createDao(name as string, metadata, +type, +fee);
+    try {
+      const daoAddr = await factoryService.createDao(name as string, metadata, +type, +fee);
+      console.log('returned addr tho', daoAddr);
+      setIsCreating(false);
+      formRef.current.reset();
+      // setLocation(`/dao/${ daoAddr }`);
+    } catch (e) {
+      // display err
+      console.log(e);
+      setIsCreating(false);
+    }
   };
   return (
     <>
@@ -121,13 +137,14 @@ const DaoInfoFormSection: FC<{ formRef: React.RefObject<HTMLFormElement> }> = ({
         <Input tw="w-36" className="peer" type="text" name="fee" placeholder=" " required />
         <Label htmlFor="fee">Joining Fee</Label>
       </InputContainer>
-      <Button onClick={createDao}>
-        Submit
-        <Next />
+      <Button onClick={createDao} disabled={isCreating}>
+        {isCreating ? 'Creating...' : 'Submit'}
+        {isCreating ? <Spinner tw="ml-1" /> : <Next />}
       </Button>
     </>
   );
 };
+
 /* createDao (name: String, metadataUrl: String, ty: u32, joiningFee: Balance, initMembers: Option<Vec<(AccountId,Text,DaoRole)>>, salt: u32) */
 const LinksFormSection: FC = () => {
   return (
