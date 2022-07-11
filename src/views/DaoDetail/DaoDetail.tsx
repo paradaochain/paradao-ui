@@ -5,6 +5,7 @@ import ProposalList from '@components/ProposalList/ProposalList';
 import { ProposalWithId } from '@interfaces/Proposal';
 import { useLocation, useRoute } from 'wouter';
 import { DAOService } from '@services/dao';
+import ZeitgeistService from '@services/zeitgeist';
 import { usePolkadot } from '@context/polkadot';
 import DAO from '@interfaces/dao';
 import { HorizontalSpinner, WhiteSpinner } from '@components/Spinner/Spinner';
@@ -27,6 +28,7 @@ const DaoDetail: React.FC = () => {
   const [addPMModalStatus, setAddPMModalStatus] = useState(false);
 
   const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting), [proposals]);
+  const zg_ws = import.meta.env.VITE_ZG_WS_URL;
 
   useEffect(() => {
     if (!params?.daoAddress) return goToPage('/');
