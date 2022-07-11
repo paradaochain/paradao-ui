@@ -156,7 +156,7 @@ export class DAOService extends ContractPromise {
         .signAndSend(this._address as string, (result) => {
           if (result.status.isInBlock) {
             result.events.forEach(({ event: { data, method, section }, phase }) => {
-              console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
+              // console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
               if (method.toLowerCase().includes('fail')) {
                 reject(`Failed to vote on ${proposalId}`);
                 console.log(` ~ FAILED TO VOTE ON ${proposalId} ~`, `${phase.toString()} : ${method} --> ${data.toString()}`);

@@ -19,8 +19,6 @@ const ProposalItem: React.FC<ProposalWithId & Props> = ({ id, title, proposer, t
   const [votingYes, setIsVotingYes] = useState<boolean>(false);
   const [votingNo, setIsVotingNo] = useState<boolean>(false);
   const { address } = usePolkadot();
-  // const vote = useCallback(async (vote: boolean) => daoService.vote(id, vote), []);
-  console.log('vote-id', id);
 
   const handleVote = (vote: boolean) => {
     const callJoin = async () => {

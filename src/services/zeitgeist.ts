@@ -19,6 +19,7 @@ class ZeitgeistService {
     return await this.sdk.models.fetchMarketData(marketId);
   }
 
+
   createCategoryMeatadata(names: string[], tickers: string[]) {
     const categories = [];
     for (let i = 0; i < names.length; i++) {
@@ -35,6 +36,8 @@ class ZeitgeistService {
 
   public createMetadata(question: string, description: string, names: string[], tickers: string[]): DecodedMarketMetadata {
     const categories = this.createCategoryMeatadata(names, tickers);
+
+  
     return {
       slug: crypto.randomUUID(),
       question,
