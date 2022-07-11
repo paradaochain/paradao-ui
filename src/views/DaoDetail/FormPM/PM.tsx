@@ -41,6 +41,9 @@ const PMForm: React.FC = () => {
 
   const onSubmit: SubmitHandler<PMForm> = async ({ question, assetName1, assetTicker1, assetName2, assetTicker2, assetName3, assetTicker3, ...metadata }) => {
     try {
+			let assetsNames = [assetName1, assetName2, assetName3];
+			let assetsTickers = [assetTicker1, assetTicker2, assetTicker3];
+			// call zeitgeist
 
     } catch (e) {
       console.log(e);
