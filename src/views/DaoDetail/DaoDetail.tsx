@@ -29,6 +29,7 @@ const DaoDetail: React.FC = () => {
 
   const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting), [proposals]);
   const zg_ws = import.meta.env.VITE_ZG_WS_URL;
+  const zeitgeist = new ZeitgeistService(zg_ws);
 
   useEffect(() => {
     if (!params?.daoAddress) return goToPage('/');
@@ -163,7 +164,7 @@ const DaoDetail: React.FC = () => {
       </div>
       {activeProposals && <ProposalList daoService={daoService} proposalList={activeProposals} />}
       <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} daoService={daoService} />
-      <NewPMModal status={addPMModalStatus} closeModal={() => setAddPMModalStatus(false)} />
+	  <NewPMModal status={addPMModalStatus} closeModal={() => setAddPMModalStatus(false)} zeitgeist={zeitgeist}} />
     </div>
   );
 };

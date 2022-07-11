@@ -33,7 +33,6 @@ const PMForm: React.FC<{ zeitgeist: ZeitgeistService }> = ({ zeitgeist }) => {
   const { errors, isSubmitting } = formState;
   const onSubmit: SubmitHandler<PMForm> = async ({ question, assetNames, assetTickers, ...metadata }) => {
     try {
-
     } catch (e) {
       console.log(e);
     }
