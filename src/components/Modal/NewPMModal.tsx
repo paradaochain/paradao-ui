@@ -1,8 +1,6 @@
-import React, { PropsWithChildren, useState } from 'react';
-import Input from '@components/Input/Input';
+import React, { PropsWithChildren } from 'react';
 import Modal from './Modal';
-import LightButton from '@components/Button/LightButton';
-import Spinner from '@components/Spinner/Spinner';
+
 import PMForm from '@views/DaoDetail/FormPM/PM';
 
 export interface IModalOptions {

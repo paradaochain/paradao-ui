@@ -7,6 +7,7 @@ import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
 import { usePolkadot } from '@context/polkadot';
+import ZeitgeistService from '@services/zeitgeist';
 
 interface PMForm {
   question: string;
@@ -30,9 +31,17 @@ const PMForm: React.FC = () => {
   const { register, handleSubmit, setError, formState } = useForm<PMForm>({ resolver });
   const { errors, isSubmitting } = formState;
   const { address } = usePolkadot();
-  const onSubmit: SubmitHandler<PMForm> = async ({ ...metadata }) => {
-    console.log(metadata);
-  };
+
+  // const zg_ws = import.meta.env.VITE_ZG_WS_URL;
+  // const zg_service = new ZeitgeistService(zg_ws);
+
+  // const onSubmit: SubmitHandler<PMForm> = async ({ question, assetNames, assetTickers, ...metadata }) => {
+  //   try {
+
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
   return (
     <form className="flex flex-col w-full">
       <div className="grid ">
