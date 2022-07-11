@@ -13,6 +13,7 @@ import NewProposalModal from '@components/Modal/NewProposalModal';
 import NewPMModal from '@components/Modal/NewPMModal';
 import daoLogo from '../../components/icons/paradao-icon.svg';
 import SocialMediaIcons from './SocialMediaIcons/SocialMediaIcons';
+import { getPmFromDao } from '@services/localStorage';
 
 const DaoDetail: React.FC = () => {
   const [, params] = useRoute('/dao/:daoAddress');
@@ -27,6 +28,7 @@ const DaoDetail: React.FC = () => {
   const [addPMModalStatus, setAddPMModalStatus] = useState(false);
 
   const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting), [proposals]);
+  const predictionsMarkets = useMemo(() => getPmFromDao(daoInfo?.address as string), [daoInfo]);
 
   useEffect(() => {
     if (!params?.daoAddress) return goToPage('/');
@@ -143,7 +145,7 @@ const DaoDetail: React.FC = () => {
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Prediction Markets</h3>
-          <h3 className="font-bold text-md text-center">{daoInfo.pms}</h3>
+          <h3 className="font-bold text-md text-center">{predictionsMarkets?.length}</h3>
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Proposals</h3>
