@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
+import  ZeitgeistService  from '@services/zeitgeist';
 
 interface PMForm {
   question: string;
@@ -25,11 +26,15 @@ const resolver = yupResolver(
     .required()
 );
 
-const PMForm: React.FC = () => {
+const PMForm: React.FC<{zeitgeist: ZeitgeistService}> = ({zeitgeist}) => {
   const { register, handleSubmit, setError, formState } = useForm<PMForm>({ resolver });
   const { errors, isSubmitting } = formState;
-  const onSubmit: SubmitHandler<PMForm> = async ({ ...metadata }) => {
-    console.log(metadata);
+  const onSubmit: SubmitHandler<PMForm> = async ({ question, assetNames, assetTickers, ...metadata }) => {
+    try {
+      await zeitgeist.createPM_dummy(question, metadata,)
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <form className="flex flex-col w-full">

@@ -102,7 +102,7 @@ export const usePolkadot = () => {
 };
 
 const loadApi = async () => {
-  const ws_url = import.meta.env.WS_URL;
+  const ws_url = import.meta.env.VITE_WS_URL;
   const provider = new WsProvider(ws_url);
   return await ApiPromise.create({
     provider,

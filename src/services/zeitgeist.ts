@@ -19,12 +19,22 @@ class ZeitgeistService {
     return await this.sdk.models.fetchMarketData(marketId);
   }
 
-  //createCategoryMeatadata(names: string[], tickers: string[]) {
-  //  const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
-  //  for name in names
-  //}
+  createCategoryMeatadata(names: string[], tickers: string[]) {
+    const categories = [];
+    for (let i = 0; i < names.length; i++) {
+      const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
+      const c = {
+        name: names[i],
+        tickets: tickers[i],
+        color: randomColor()
+      } as CategoryMetadata;
+      categories.push(c);
+    }
+    return categories;
+  }
 
-  public createMetadata(question: string, description: string, categories: CategoryMetadata[]): DecodedMarketMetadata {
+  public createMetadata(question: string, description: string, names: string[], tickers: string[]): DecodedMarketMetadata {
+    const categories = this.createCategoryMeatadata(names, tickers);
     return {
       slug: crypto.randomUUID(),
       question,
@@ -43,6 +53,19 @@ class ZeitgeistService {
     const tx = await this.sdk.api.tx.swaps.swapExactAmountIn();
   }
 
+  public async createMetadataAndPM(
+    question: string,
+    description: string,
+    names: string[],
+    tickers: string[],
+    creatorAddress: string,
+    oracle: string,
+    duration: string
+  ) {
+    const metadata = this.createMetadata(question, description, names, tickers);
+    // await this.createPM(creatorAddress, oracle, duration, metadata  )
+  }
+
   public async createPM(
     creatorAddress: string,
     oracle: string,
@@ -50,10 +73,11 @@ class ZeitgeistService {
     metadata: DecodedMarketMetadata & { categories: CategoryMetadata[] }
   ) {
     try {
+      const tokenDecimals = 10 ** 10;
       const injected = await web3FromAddress(creatorAddress);
-
-      const sdk = await SDK.initialize('');
-      const amount = (10 ** 10 * 100).toString();
+      const amount = (tokenDecimals * 100).toString();
+      const optionsLength = metadata.categories.length;
+      const weights = Array.from({ length: optionsLength }, () => (tokenDecimals * (10 / optionsLength)).toFixed());
 
       const params: CreateCpmmMarketAndDeployAssetsParams = {
         // The actual signer provider to sign the transaction
@@ -63,7 +87,7 @@ class ZeitgeistService {
         // Start and end block numbers or milliseconds since epoch
         period: { timestamp: [Date.now(), Date.now() + ms(duration)] },
         // Categorical or Scalar
-        marketType: { Categorical: metadata.categories.length },
+        marketType: { Categorical: optionsLength },
         // Dispute settlement can only be Authorized currently
         mdm: { Authorized: 0 },
         // A hash pointer to the metadata of the market
@@ -71,13 +95,12 @@ class ZeitgeistService {
         // The amount of each token to add to the pool (MIN 100 ZTG)
         amount,
         // List of relative denormalized weights of each asset
-        weights: Array.from({ length: metadata.categories.length }, () => amount),
+        weights: weights,
         // true to get txn fee estimation otherwise false
         callbackOrPaymentInfo: false
       };
 
-      const marketId = await sdk.models.createCpmmMarketAndDeployAssets(params);
-      return marketId;
+      await this.sdk.models.createCpmmMarketAndDeployAssets(params);
     } catch (error) {}
   }
 }
