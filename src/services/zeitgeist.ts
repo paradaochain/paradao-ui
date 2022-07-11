@@ -92,9 +92,25 @@ class ZeitgeistService {
       parseInt(amount)
     );
 
-    await this.sdk.api.tx.swaps
-      .swapExactAmountIn(pool.poolId, this.ztgAsset, amount, asset, minOut.mul(slippage).toFixed(0), maxPrice)
-      .signAndSend(addr);
+    return await new Promise(async (resolve, reject) => {
+      setTimeout(reject, 120000);
+      const unsubscribe = await this.sdk.api.tx.swaps
+        .swapExactAmountIn(pool.poolId, this.ztgAsset, amount, asset, minOut.mul(slippage).toFixed(0), maxPrice)
+        .signAndSend(addr, (result) => {
+          if (result.status.isInBlock) {
+            result.events.forEach(({ event: { data, method, section } }) => {
+              if (section == 'swaps' && method == 'SwapExactAmountIn') {
+                resolve(data.toJSON());
+              }
+            });
+          } else if (result.status.isFinalized) {
+            console.log('dao create finalized');
+            unsubscribe();
+          } else if (result.isError) {
+            reject(result.status.toString());
+          }
+        });
+    });
   }
 
   public async createMetadataAndPM(
@@ -121,28 +137,41 @@ class ZeitgeistService {
       const optionsLength = metadata.categories?.length;
       const weights = Array.from({ length: optionsLength }, () => (tokenDecimals * (10 / optionsLength)).toFixed());
 
-      const params: CreateCpmmMarketAndDeployAssetsParams = {
-        // The actual signer provider to sign the transaction
-        signer: { address: creatorAddress, signer: injected.signer },
-        // The address that will be responsible for reporting the market
-        oracle,
-        // Start and end block numbers or milliseconds since epoch
-        period: { timestamp: [Date.now(), Date.now() + ms(duration)] },
-        // Categorical or Scalar
-        marketType: { Categorical: optionsLength },
-        // Dispute settlement can only be Authorized currently
-        mdm: { Authorized: 0 },
-        // A hash pointer to the metadata of the market
-        metadata,
-        // The amount of each token to add to the pool (MIN 100 ZTG)
-        amount,
-        // List of relative denormalized weights of each asset
-        weights: weights,
-        // true to get txn fee estimation otherwise false
-        callbackOrPaymentInfo: false
-      };
+      return await new Promise(async (resolve, reject) => {
+        const params: CreateCpmmMarketAndDeployAssetsParams = {
+          // The actual signer provider to sign the transaction
+          signer: { address: creatorAddress, signer: injected.signer },
+          // The address that will be responsible for reporting the market
+          oracle,
+          // Start and end block numbers or milliseconds since epoch
+          period: { timestamp: [Date.now(), Date.now() + ms(duration)] },
+          // Categorical or Scalar
+          marketType: { Categorical: optionsLength },
+          // Dispute settlement can only be Authorized currently
+          mdm: { Authorized: 0 },
+          // A hash pointer to the metadata of the market
+          metadata,
+          // The amount of each token to add to the pool (MIN 100 ZTG)
+          amount,
+          // List of relative denormalized weights of each asset
+          weights: weights,
+          // true to get txn fee estimation otherwise false
+          callbackOrPaymentInfo: (result) => {
+            if (result.status.isInBlock) {
+              result.events.forEach(({ event: { data, method, section } }) => {
+                if (section == 'predictionMarkets' && method == 'MarketCreated') {
+                  resolve(data[0].toString());
+                }
+              });
+            } else if (result.status.isFinalized) {
+            } else if (result.isError) {
+              reject(result.status.toString());
+            }
+          }
+        };
 
-      await this.sdk.models.createCpmmMarketAndDeployAssets(params);
+        await this.sdk.models.createCpmmMarketAndDeployAssets(params);
+      });
     } catch (error) {}
   }
 }
