@@ -1,5 +1,5 @@
 import Input from '@components/Input/Input';
-import React from 'react';
+import React, { useState } from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -7,6 +7,7 @@ import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
 import { usePolkadot } from '@context/polkadot';
+import {DAOService} from '@services/dao';
 
 interface TreasuryInputs {
   title: string;
@@ -26,12 +27,18 @@ const resolver = yupResolver(
     .required()
 );
 
-const TreasuryForm: React.FC = () => {
+const TreasuryForm: React.FC<{daoService: DAOService}> = ({daoService}) => {
   const { register, handleSubmit, setError, formState } = useForm<TreasuryInputs>({ resolver });
   const { errors, isSubmitting } = formState;
-  const { address } = usePolkadot();
-  const onSubmit: SubmitHandler<TreasuryInputs> = async ({ ...metadata }) => {
-    console.log(metadata);
+  const address = usePolkadot();
+
+  const onSubmit: SubmitHandler<TreasuryInputs> = async ({ title, balance, address, ...metadata }) => {
+    const proposal = { Treasury: [address, balance] };
+	try {
+		await daoService.propose(proposal, title, metadata);
+	} catch (e) {
+		console.log(e)
+	}
   };
   return (
     <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>

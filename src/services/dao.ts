@@ -127,14 +127,14 @@ export class DAOService extends ContractPromise {
     await this.propose(proposalType, title, proposalMetadata);
   }
 
-  async createFeePorposal(fee: number, title: string, proposalMetadata: unknown) {
+  async createFeeProposal(fee: number, title: string, proposalMetadata: unknown) {
     const proposalType = this.api.createType('ProposalType', {
       UpdateFee: fee
     });
     await this.propose(proposalType, title, proposalMetadata);
   }
 
-  async createMembersPorposal([members, roles]: [string[], [string, unknown]], title: string, proposalMetadata: unknown) {
+  async createMembersPrpposal([members, roles]: [string[], [string, unknown]], title: string, proposalMetadata: unknown) {
     const proposalType = this.api.createType('ProposalType', {
       Membership: [members, roles]
     });

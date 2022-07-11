@@ -3,13 +3,15 @@ import { ProposalTypes } from '@interfaces/ProposalTypes';
 import FormProposalType from '@views/DaoDetail/FormProposalType/FormProposalType';
 import React, { PropsWithChildren, useState } from 'react';
 import Modal from './Modal';
+import { DAOService } from '@services/dao';
 
 export interface IModalOptions {
   status: boolean;
   closeModal: () => void;
+  daoService: DAOService
 }
 
-const NewProposalModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, closeModal }) => {
+const NewProposalModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, closeModal, daoService }) => {
   const [type, setType] = useState<ProposalTypes>(ProposalTypes.Membership);
   const proposalTypesOptions = [
     {
@@ -40,7 +42,7 @@ const NewProposalModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, 
         <Dropdown options={proposalTypesOptions}>{type}</Dropdown>
       </div>
       <div>
-        <FormProposalType type={type as ProposalTypes} />
+		 <FormProposalType type={type as ProposalTypes} daoService={daoService as DAOService}/>
       </div>
     </Modal>
   );

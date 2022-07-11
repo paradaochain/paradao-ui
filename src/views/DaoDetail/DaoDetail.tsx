@@ -160,7 +160,7 @@ const DaoDetail: React.FC = () => {
         <Button onClick={() => setAddModalStatus(true)}>New proposal</Button>
       </div>
       {activeProposals && <ProposalList daoService={daoService} proposalList={activeProposals} />}
-      <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} />
+      <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} daoService={daoService} />
       <NewPMModal status={addPMModalStatus} closeModal={() => setAddPMModalStatus(false)} />
     </div>
   );

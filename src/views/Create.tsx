@@ -113,9 +113,6 @@ const Create: React.FC = () => {
           <TextArea label="Purpose" {...register('purpose')} error={errors.purpose?.message} />
         </div>
         <div>
-          {/* <LightButton disabled={isCreating || (formState.errors && !formState.dirtyFields ? true : false)}>
-            {isCreating ? 'Creating...' : 'Submit'}
-            {isCreating && <Spinner tw="ml-1" />} */}
 
           <LightButton disabled={!address || (formState.errors && !formState.dirtyFields)}>
             {isSubmitting ? 'Creating...' : 'Submit'}
