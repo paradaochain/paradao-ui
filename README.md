@@ -1,5 +1,6 @@
 # ParaDao UI
 A web app to create Daos onto a set of smart contracts on a parachain, and do cool things with them
+<img width="1786" alt="Screenshot 2022-07-11 at 11 46 01 AM" src="https://user-images.githubusercontent.com/18553484/178194081-310d8bb4-9330-46a6-8c26-d202a6687f47.png">
 
 To run locally with local chains found in https://github.com/paradaochain/chain
 Please run the docker file and do:
