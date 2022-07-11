@@ -89,7 +89,7 @@ const Create: React.FC = () => {
           <div className="flex flex-col items-start justify-center">
             <Input type="text" placeholder="Dao Name" {...register('name')} error={errors.name} />
             <div className="flex flex-row justify-start items-start space-x-16">
-              <Input type="number" placeholder="Fee to Join" {...register('fee')} error={errors.fee} />
+              <Input type="number" placeholder="Fee to Join (Para)" {...register('fee')} error={errors.fee} />
               <Dropdown options={typeOptions}>{type === null ? 'Type...' : displayType}</Dropdown>
             </div>
           </div>

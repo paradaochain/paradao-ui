@@ -2,7 +2,7 @@
   "source": {
     "hash": "0xd4b9b7901109fac5b744079348b6dfd958924525e83364250962146872b8a7fe",
     "language": "ink! 3.3.0",
-    "compiler": "rustc 1.64.0-nightly"
+    "compiler": "rustc 1.62.0-nightly"
   },
   "contract": {
     "name": "factory",

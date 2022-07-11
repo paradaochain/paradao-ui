@@ -2,7 +2,7 @@
   "source": {
     "hash": "0x1eb119ac38829bcc1d0fb2b2be59f13d6302b93d794532acf623e43597643a01",
     "language": "ink! 3.3.0",
-    "compiler": "rustc 1.64.0-nightly"
+    "compiler": "rustc 1.62.0-nightly"
   },
   "contract": {
     "name": "dao",
