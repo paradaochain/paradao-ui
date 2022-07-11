@@ -4,10 +4,13 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { FactoryService } from '@services/factory';
 import { deleteSession, getSession, setSession } from '@services/localStorage';
 import { AccountType } from '@context/wallet';
+import ZeitgeistService from '@services/zeitgeist';
+import SDK from '@zeitgeistpm/sdk';
 
 interface PolkadotContextState {
   api: ApiPromise;
   factoryService: FactoryService;
+  zeitgeistService: ZeitgeistService;
   address?: string;
   loadWallet: () => Promise<void>;
   disconnectWallet: () => void;
@@ -26,6 +29,7 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
   const [api, setApi] = useState<ApiPromise | null>(null);
   const [factoryService, setFactoryService] = useState<FactoryService | null>(null);
   const [address, setAddr] = useState<string>();
+  const [zeitgeistService, setZeitgeistService] = useState<ZeitgeistService | null>(null);
   const [hasExtension, setHasExtension] = useState<boolean>(false);
   const [accounts, setAccounts] = useState<Array<AccountType>>();
 
@@ -45,9 +49,10 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
   const setAddress = useCallback(
     async (this_addr: string) => {
       const { signer } = await web3FromAddress(this_addr);
-      if (!api || !factoryService) return;
+      if (!api || !factoryService || !zeitgeistService) return;
       setAddr(this_addr);
       api.setSigner(signer);
+      zeitgeistService.sdk.api.setSigner(signer);
       factoryService.setUserAddress(this_addr);
       setSession({ allowConnection: true });
     },
@@ -66,7 +71,9 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
 
   useEffect(() => {
     loadApi().then(async (api: ApiPromise) => {
+      const sdk = await SDK.initialize('ws://127.0.0.1:8844');
       setApi(api);
+      setZeitgeistService(new ZeitgeistService(sdk));
       setFactoryService(new FactoryService(api));
     });
   }, []);
@@ -84,7 +91,8 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
           disconnectWallet,
           hasExtension,
           accounts,
-          setAddress
+          setAddress,
+          zeitgeistService
         } as PolkadotContextState
       }
     >

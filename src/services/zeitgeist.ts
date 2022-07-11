@@ -8,18 +8,19 @@ import { Decimal } from 'decimal.js';
 
 class ZeitgeistService {
   public sdk!: SDK;
-  constructor(endpoint: string) {
-    SDK.initialize(endpoint).then((sdk) => (this.sdk = sdk));
+  public ZTG: number;
+  public ztgAsset: string;
+  constructor(sdk: SDK) {
+    this.sdk = sdk;
+    this.ZTG = 10 ** 10;
+    this.ztgAsset = JSON.stringify({ ztg: null });
   }
-  // fetchPoolSpotPrices
-  //
-  // swapexactamountout
-  // https://docs.zeitgeist.pm/docs/build/sdk/swap#swapexactamountout
+
   public async getMarketInfo(marketId: number): Promise<Market> {
     return await this.sdk.models.fetchMarketData(marketId);
   }
 
-  createCategoryMeatadata(names: string[], tickers: string[]) {
+  public createCategoryMeatadata(names: string[], tickers: string[]) {
     const categories = [];
     for (let i = 0; i < names.length; i++) {
       const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
@@ -35,7 +36,6 @@ class ZeitgeistService {
 
   public createMetadata(question: string, description: string, names: string[], tickers: string[]): DecodedMarketMetadata {
     const categories = this.createCategoryMeatadata(names, tickers);
-
     return {
       slug: crypto.randomUUID(),
       question,
@@ -44,14 +44,66 @@ class ZeitgeistService {
     };
   }
 
-  public async buyAsset(poolId: number, amount: number) {
-    const Decimals = 10 ** 10;
-    const ammount = new Decimal(amount).mul(Decimals).toFixed(0);
-    const slippage = new Decimal(0.98);
-    const maxPrice = 9999 * Decimals;
+  public calculateGi(
+    tokenBalanceIn: number, // amount of 'in' asset in the pool
+    tokenWeightIn: number, // weight of 'in' asset on the pool
+    tokenBalanceOut: number, // amount of 'out' asset in the pool
+    tokenWeightOut: number, // weight of 'out' asset on the pool
+    tokenAmountIn: number, // amount in for the swap
+    swapFee = 0 //0 for now
+  ) {
+    const weightRatio = new Decimal(tokenWeightIn).div(new Decimal(tokenWeightOut));
+    const adjustedIn = new Decimal(tokenAmountIn).times(new Decimal(1).minus(new Decimal(swapFee)));
+    const y = new Decimal(tokenBalanceIn).div(new Decimal(tokenBalanceIn).plus(adjustedIn));
+    const foo = y.pow(weightRatio);
+    const bar = new Decimal(1).minus(foo);
+    const tokenAmountOut = new Decimal(tokenBalanceOut).times(bar);
+    return tokenAmountOut;
+  }
 
-    // https://docs.zeitgeist.pm/docs/build/sdk/swap#swapexactamountin
-    const tx = await this.sdk.api.tx.swaps.swapExactAmountIn();
+  public async getAssets(market: Market) {
+    const pool = await market.getPool();
+
+    if (!pool) throw new Error('We could not find any pool assigned to this prediction market');
+
+    return await Promise.all(
+      market.outcomeAssets.map(async (a) => {
+        const assetInfo: any = a.toJSON();
+        const spotPrice = await pool.getSpotPrice(this.ztgAsset, assetInfo);
+        return { ...assetInfo, spotPrice: spotPrice.toJSON() / this.ZTG };
+      })
+    );
+  }
+
+  public async buyAsset(marketId: number, asset: string, tokenAmount: number, addr: string) {
+    const market = await this.getMarketInfo(marketId);
+    const pool = await market.getPool();
+
+    if (!pool) throw new Error('We could not find any pool assigned to this prediction market');
+
+    const amount = new Decimal(tokenAmount).mul(this.ZTG).toFixed(0);
+    const slippage = new Decimal(0.98);
+    const maxPrice = 9999 * this.ZTG;
+
+    const poolAccountId = await pool.accountId();
+
+    const ztgWeight = new Decimal(pool.weights.toHuman()['Ztg'].replace(/\,/g, '')).toNumber();
+    const poolZtgBalance: any = await this.sdk.api.query.system.account(poolAccountId.toString());
+
+    const assetWeight = new Decimal(pool.weights.toHuman()[JSON.stringify(asset)].replace(/\,/g, '')).toNumber();
+    const poolAssetBalance: any = await this.sdk.api.query.tokens.accounts(poolAccountId.toString(), this.sdk.api.createType('Asset', asset));
+
+    const minOut = this.calculateGi(
+      poolZtgBalance.data.free.toNumber(),
+      ztgWeight,
+      poolAssetBalance.free.toNumber(),
+      assetWeight,
+      parseInt(amount)
+    );
+
+    await this.sdk.api.tx.swaps
+      .swapExactAmountIn(pool.poolId, (pool.assets as any).toJSON()[4], amount, asset, minOut.mul(slippage).toFixed(0), maxPrice)
+      .signAndSend(addr);
   }
 
   public async createMetadataAndPM(
