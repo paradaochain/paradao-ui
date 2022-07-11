@@ -63,20 +63,18 @@ class ZeitgeistService {
     duration: string
   ) {
     const metadata = this.createMetadata(question, description, names, tickers);
-    // await this.createPM(creatorAddress, oracle, duration, metadata  )
+    await this.createPM(creatorAddress, oracle, duration, metadata);
   }
 
-  public async createPM(
-    creatorAddress: string,
-    oracle: string,
-    duration: string,
-    metadata: DecodedMarketMetadata & { categories: CategoryMetadata[] }
-  ) {
+  public async createPM(creatorAddress: string, oracle: string, duration: string, metadata: DecodedMarketMetadata) {
     try {
       const tokenDecimals = 10 ** 10;
       const injected = await web3FromAddress(creatorAddress);
       const amount = (tokenDecimals * 100).toString();
-      const optionsLength = metadata.categories.length;
+      if (!metadata.categories) {
+        throw new Error('Category must be defined');
+      }
+      const optionsLength = metadata.categories?.length;
       const weights = Array.from({ length: optionsLength }, () => (tokenDecimals * (10 / optionsLength)).toFixed());
 
       const params: CreateCpmmMarketAndDeployAssetsParams = {

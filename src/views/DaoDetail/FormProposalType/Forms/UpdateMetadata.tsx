@@ -13,7 +13,7 @@ import { BsYoutube } from 'react-icons/bs';
 import { BiWorld } from 'react-icons/bi';
 import InputIcon from '@components/Input/InputIcon';
 import { usePolkadot } from '@context/polkadot';
-import {DAOService} from '@services/dao';
+import { DAOService } from '@services/dao';
 
 interface UpdateMetadataInputs {
   logo: string;
