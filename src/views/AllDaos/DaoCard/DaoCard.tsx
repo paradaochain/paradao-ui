@@ -34,7 +34,7 @@ const DaoCard: React.FC<DAO> = ({ name, address, purpose, logo, funds, members, 
         <CardStats>
           <CardStat>
             <CardStatTitle>DAO funds</CardStatTitle>
-            <CardStatData>{funds}</CardStatData>
+            <CardStatData>{`${funds} Para`}</CardStatData>
           </CardStat>
           <CardStat>
             <CardStatTitle>Members</CardStatTitle>

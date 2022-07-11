@@ -137,7 +137,7 @@ const DaoDetail: React.FC = () => {
       </div>
       <div className="grid grid-cols-3 w-full gap-5">
         <div className="bg-white rounded-md p-3">
-          <h3 className="font-bold text-xl text-center">Treassury</h3>
+          <h3 className="font-bold text-xl text-center">Treasury</h3>
           <h3 className="font-bold text-md text-center">{daoInfo.funds} Para</h3>
           <div className="flex flex-col"></div>
         </div>

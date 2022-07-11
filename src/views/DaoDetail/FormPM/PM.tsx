@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
+import { usePolkadot } from '@context/polkadot';
 
 interface PMForm {
   question: string;
@@ -28,6 +29,7 @@ const resolver = yupResolver(
 const PMForm: React.FC = () => {
   const { register, handleSubmit, setError, formState } = useForm<PMForm>({ resolver });
   const { errors, isSubmitting } = formState;
+  const { address } = usePolkadot();
   const onSubmit: SubmitHandler<PMForm> = async ({ ...metadata }) => {
     console.log(metadata);
   };
@@ -41,7 +43,7 @@ const PMForm: React.FC = () => {
         <Input type="text" placeholder="Asset Name" {...register('assetNames')} error={errors.question} />
         <Input type="text" placeholder="Asset Ticker" {...register('assetTickers')} error={errors.description} />
       </div>
-      <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
+      <LightButton disabled={!address || (formState.errors && !formState.dirtyFields) ? true : false}>
         {isSubmitting ? 'Creating...' : 'Submit'}
         {isSubmitting && <Spinner tw="ml-1" />}
       </LightButton>

@@ -12,12 +12,8 @@ export interface IModalOptions {
 }
 
 const NewProposalModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, closeModal, daoService }) => {
-  const [type, setType] = useState<ProposalTypes>(ProposalTypes.Membership);
+  const [type, setType] = useState<ProposalTypes>(ProposalTypes.Treasury);
   const proposalTypesOptions = [
-    {
-      name: ProposalTypes.Membership,
-      click: () => setType(ProposalTypes.Membership)
-    },
     {
       name: ProposalTypes.Treasury,
       click: () => setType(ProposalTypes.Treasury)
@@ -29,6 +25,10 @@ const NewProposalModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, 
     {
       name: ProposalTypes.UpdateFee,
       click: () => setType(ProposalTypes.UpdateFee)
+    },
+    {
+      name: ProposalTypes.Membership,
+      click: () => setType(ProposalTypes.Membership)
     }
   ];
 
