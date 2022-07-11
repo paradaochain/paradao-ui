@@ -144,7 +144,7 @@ const DaoDetail: React.FC = () => {
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Prediction Markets</h3>
-          <h3 className="font-bold text-md text-center">{daoInfo.totalPms} Para</h3>
+          <h3 className="font-bold text-md text-center">{daoInfo.totalPms}</h3>
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Proposals</h3>
@@ -160,7 +160,7 @@ const DaoDetail: React.FC = () => {
         <Button onClick={() => setAddModalStatus(true)}>New proposal</Button>
       </div>
       {activeProposals && <ProposalList daoService={daoService} proposalList={activeProposals} />}
-      <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} />
+      <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} daoService={daoService} />
       <NewPMModal status={addPMModalStatus} closeModal={() => setAddPMModalStatus(false)} />
     </div>
   );

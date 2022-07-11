@@ -13,6 +13,7 @@ import { BsYoutube } from 'react-icons/bs';
 import { BiWorld } from 'react-icons/bi';
 import InputIcon from '@components/Input/InputIcon';
 import { usePolkadot } from '@context/polkadot';
+import {DAOService} from '@services/dao';
 
 interface UpdateMetadataInputs {
   logo: string;
@@ -40,7 +41,7 @@ const resolver = yupResolver(
     .required()
 );
 
-const UpdateMetadata: React.FC = () => {
+const UpdateMetadata: React.FC<{ daoService: DAOService }> = ({ daoService }) => {
   const { register, handleSubmit, setValue, formState } = useForm<UpdateMetadataInputs>({ resolver });
   const { errors, isSubmitting } = formState;
   const { address } = usePolkadot();

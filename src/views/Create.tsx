@@ -63,7 +63,7 @@ const Create: React.FC = () => {
     setIsCreating(true);
     setTimeout(() => {
       setIsCreating(false);
-      toast.error('Could not join now :( Try again?');
+      toast.error('Could not create now :( Try again?');
     }, 120000);
     try {
       const daoAddr = await factoryService.createDao(name, metadata, type, fee);
@@ -113,9 +113,6 @@ const Create: React.FC = () => {
           <TextArea label="Purpose" {...register('purpose')} error={errors.purpose?.message} />
         </div>
         <div>
-          {/* <LightButton disabled={isCreating || (formState.errors && !formState.dirtyFields ? true : false)}>
-            {isCreating ? 'Creating...' : 'Submit'}
-            {isCreating && <Spinner tw="ml-1" />} */}
 
           <LightButton disabled={!address || (formState.errors && !formState.dirtyFields)}>
             {isSubmitting ? 'Creating...' : 'Submit'}
