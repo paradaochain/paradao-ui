@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
+import { usePolkadot } from '@context/polkadot';
 
 interface TreasuryInputs {
   title: string;
@@ -28,6 +29,7 @@ const resolver = yupResolver(
 const TreasuryForm: React.FC = () => {
   const { register, handleSubmit, setError, formState } = useForm<TreasuryInputs>({ resolver });
   const { errors, isSubmitting } = formState;
+  const { address } = usePolkadot();
   const onSubmit: SubmitHandler<TreasuryInputs> = async ({ ...metadata }) => {
     console.log(metadata);
   };
@@ -39,7 +41,7 @@ const TreasuryForm: React.FC = () => {
       </div>
       <Input type="text" placeholder="Address" {...register('address')} error={errors.address} className="w-full" />
       <TextArea label="Description" {...register('description')} error={errors.description?.message} />
-      <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
+      <LightButton disabled={!address || (formState.errors && !formState.dirtyFields)}>
         {isSubmitting ? 'Creating...' : 'Submit'}
         {isSubmitting && <Spinner tw="ml-1" />}
       </LightButton>

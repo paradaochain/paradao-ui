@@ -17,7 +17,7 @@ const SideAddress = tw.p`text-sm text-center`;
 const LayoutSidebar: FC<{ showModal: () => void }> = ({ showModal }) => {
   return (
     <div tw="flex width[fit-content]">
-      <Sidebar showModal={showModal}/>
+      <Sidebar showModal={showModal} />
     </div>
   );
 };

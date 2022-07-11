@@ -136,6 +136,27 @@ export class DAOService extends ContractPromise {
   }
 
   async vote(proposalId: number, vote: boolean) {
-    await this.tx.vote({ storageDepositLimit, gasLimit }, proposalId, +vote).signAndSend(this._address as string);
+    return await new Promise(async (resolve, reject) => {
+      setTimeout(reject, 120000);
+      const unsubscribe = await this.tx
+        .vote({ storageDepositLimit, gasLimit }, proposalId, +vote)
+        .signAndSend(this._address as string, (result) => {
+          if (result.status.isInBlock) {
+            result.events.forEach(({ event: { data, method, section }, phase }) => {
+              console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
+              if (method.toLowerCase().includes('fail')) {
+                reject(`Failed to vote on ${proposalId}`);
+                console.log(` ~ FAILED TO VOTE ON ${proposalId} ~`, `${phase.toString()} : ${method} --> ${data.toString()}`);
+              } else if (method.toLowerCase().includes('success')) {
+                resolve(`voted on ${proposalId} - ${vote}`);
+              }
+            });
+          } else if (result.status.isFinalized) {
+            unsubscribe();
+          } else if (result.isError) {
+            reject(result.status.toString());
+          }
+        });
+    });
   }
 }

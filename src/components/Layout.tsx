@@ -15,19 +15,19 @@ const ContentContainer = tw.div`p-6 flex flex-col flex-1 justify-start items-sta
 
 const Layout: FC<PropsWithChildren> = ({ children: Component }) => {
   const isMobile = useMobile();
-  const [ showWalletModal, setShowWalletModal ] = useState<boolean>(false);
+  const [showWalletModal, setShowWalletModal] = useState<boolean>(false);
 
   return (
     <ScreenContainer>
       <div tw="flex flex-1 overflow-hidden">
         {/* TODO  mobile menu */}
-        {!isMobile && <Sidebar showModal={ () => setShowWalletModal(true) } />}
+        {!isMobile && <Sidebar showModal={() => setShowWalletModal(true)} />}
         <div tw="flex flex-1 flex-col">
           {/* <Header /> */}
           <ContentContainer>
             <Breadcrumbs />
             <main className="w-full my-0 mx-auto">{Component}</main>
-            <WalletModal isOpened={ showWalletModal } onClose={ () => setShowWalletModal(false) } />
+            <WalletModal isOpened={showWalletModal} onClose={() => setShowWalletModal(false)} />
           </ContentContainer>
         </div>
       </div>

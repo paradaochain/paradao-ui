@@ -6,6 +6,9 @@ import { ProposalStatus } from '@interfaces/ProposalStatus';
 import { DAOService } from '@services/dao';
 import { IntlAddress } from '@utils/Intl';
 import React, { useCallback, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { usePolkadot } from '@context/polkadot';
+import { WhiteSpinner } from '@components/Spinner/Spinner';
 
 interface Props {
   daoService: DAOService;
@@ -13,11 +16,43 @@ interface Props {
 
 const ProposalItem: React.FC<ProposalWithId & Props> = ({ id, title, proposer, tx, status, expires, threshold, daoService }) => {
   const [modal, setModal] = useState<boolean>(false);
-  const vote = useCallback(async (vote: boolean) => daoService.vote(id, vote), []);
+  const [votingYes, setIsVotingYes] = useState<boolean>(false);
+  const [votingNo, setIsVotingNo] = useState<boolean>(false);
+  const { address } = usePolkadot();
+  // const vote = useCallback(async (vote: boolean) => daoService.vote(id, vote), []);
+  console.log('vote-id', id);
+
+  const handleVote = (vote: boolean) => {
+    const callJoin = async () => {
+      if (vote) setIsVotingYes(true);
+      else setIsVotingNo(true);
+      setTimeout(() => {
+        setIsVotingYes(false);
+        setIsVotingNo(false);
+        toast.error('Could not vote now :( Try again?');
+      }, 120000);
+      toast('Your voice will be heard! Voting... :)');
+      try {
+        const confirm = await daoService.vote(id, vote);
+        setIsVotingYes(false);
+        setIsVotingNo(false);
+        toast.success('Successfully voted!');
+        setTimeout(() => setModal(false), 1000);
+      } catch (e) {
+        // display err
+        console.log(e);
+        setIsVotingYes(false);
+        setIsVotingNo(false);
+        toast.error(`Could not vote ${e}`);
+      }
+    };
+    callJoin();
+  };
 
   return (
     <>
       <div className="w-full bg-white rounded-lg p-3 ">
+        <Toaster position="top-center" reverseOrder={false} />
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold mb-4">{title}</h2>
           <Button onClick={() => setModal(true)}>Details</Button>
@@ -53,11 +88,11 @@ const ProposalItem: React.FC<ProposalWithId & Props> = ({ id, title, proposer, t
           </div>
           <p className="text-xs text-gray-500">Votes Option</p>
           <div className="flex justify-between">
-            <LightButton className="min-w-[50px]" onClick={() => vote(true)}>
-              Yes
+            <LightButton className="min-w-[50px]" onClick={() => handleVote(true)} disabled={!address || votingYes || votingNo}>
+              {votingYes ? <WhiteSpinner /> : 'Yes'}
             </LightButton>
-            <LightButton className="min-w-[50px" onClick={() => vote(false)}>
-              No
+            <LightButton className="min-w-[50px" onClick={() => handleVote(false)} disabled={!address || votingYes || votingNo}>
+              {votingNo ? <WhiteSpinner /> : 'No'}
             </LightButton>
           </div>
         </div>

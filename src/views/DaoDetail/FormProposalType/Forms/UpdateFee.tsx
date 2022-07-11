@@ -12,6 +12,7 @@ import { BsInstagram } from 'react-icons/bs';
 import { BsYoutube } from 'react-icons/bs';
 import { BiWorld } from 'react-icons/bi';
 import InputIcon from '@components/Input/InputIcon';
+import { usePolkadot } from '@context/polkadot';
 
 interface UpdateFeeInputs {
   fee: number;
@@ -28,6 +29,7 @@ const resolver = yupResolver(
 const UpdateFee: React.FC = () => {
   const { register, handleSubmit, setValue, formState } = useForm<UpdateFeeInputs>({ resolver });
   const { errors, isSubmitting } = formState;
+  const { address } = usePolkadot();
   const onSubmit: SubmitHandler<UpdateFeeInputs> = async ({ ...metadata }) => {
     console.log(metadata);
   };
@@ -35,7 +37,7 @@ const UpdateFee: React.FC = () => {
     <form className="flex flex-col w-full mb-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-center justify-between flex-wrap">
         <Input type="text" placeholder="Fee" {...register('fee')} error={errors.fee} className="w-full" />
-        <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
+        <LightButton disabled={!address || (formState.errors && !formState.dirtyFields)}>
           {isSubmitting ? 'Creating...' : 'Submit'}
           {isSubmitting && <Spinner tw="ml-1" />}
         </LightButton>

@@ -71,13 +71,17 @@ const Wallet: FC<{ hideModal: () => void }> = ({ hideModal }) => {
           </ModalHeaderDiv>
           <div tw="p-6 overflow-y-auto max-height[400px]">
             <HelperText>Choose an account from your Polkadot browser Extension</HelperText>
-            {(!accounts || accounts.length === 0) ? <h1>Loading... <HorizontalSpinner/></h1> :
-              accounts.map(act => {
+            {!accounts || accounts.length === 0 ? (
+              <h1>
+                Loading... <HorizontalSpinner />
+              </h1>
+            ) : (
+              accounts.map((act) => {
                 return (
                   <ul tw="my-4 space-y-3" key={act.address}>
                     <li>
                       <WalletButton className="group" onClick={() => setAndClose(act.address)}>
-                        <Identicon value={act.address} size={32} theme={'substrate'}/>
+                        <Identicon value={act.address} size={32} theme={'substrate'} />
                         <div tw="ml-3 flex-1">
                           <WalletText>{act.name}</WalletText>
                           <WalletAddrText>{IntlAddress(act.address, 36)}</WalletAddrText>
@@ -86,8 +90,8 @@ const Wallet: FC<{ hideModal: () => void }> = ({ hideModal }) => {
                     </li>
                   </ul>
                 );
-              }) 
-            }
+              })
+            )}
             {/* <InfoSection>
               <QuestionCircle />
               Why do I need to connect with my wallet?

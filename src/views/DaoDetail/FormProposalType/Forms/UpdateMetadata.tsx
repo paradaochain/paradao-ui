@@ -12,6 +12,7 @@ import { BsInstagram } from 'react-icons/bs';
 import { BsYoutube } from 'react-icons/bs';
 import { BiWorld } from 'react-icons/bi';
 import InputIcon from '@components/Input/InputIcon';
+import { usePolkadot } from '@context/polkadot';
 
 interface UpdateMetadataInputs {
   logo: string;
@@ -42,6 +43,7 @@ const resolver = yupResolver(
 const UpdateMetadata: React.FC = () => {
   const { register, handleSubmit, setValue, formState } = useForm<UpdateMetadataInputs>({ resolver });
   const { errors, isSubmitting } = formState;
+  const { address } = usePolkadot();
   const setLogo = (logo: string) => setValue('logo', logo);
   const onSubmit: SubmitHandler<UpdateMetadataInputs> = async ({ ...metadata }) => {
     console.log(metadata);
@@ -64,7 +66,7 @@ const UpdateMetadata: React.FC = () => {
         />
         <InputIcon type="text" placeholder="Youtube" {...register('links.youtube')} error={errors.links?.youtube} icon={<BsYoutube />} />
       </div>
-      <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
+      <LightButton disabled={!address || (formState.errors && !formState.dirtyFields)}>
         {isSubmitting ? 'Creating...' : 'Submit'}
         {isSubmitting && <Spinner tw="ml-1" />}
       </LightButton>

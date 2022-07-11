@@ -50,7 +50,7 @@ const resolver = yupResolver(
 
 const Create: React.FC = () => {
   const { register, handleSubmit, formState, setValue, watch } = useForm<CreateDaoInputs>({});
-  const { factoryService } = usePolkadot();
+  const { address, factoryService } = usePolkadot();
   const { errors, isSubmitting } = formState;
   const [, setLocation] = useLocation();
   const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -117,7 +117,7 @@ const Create: React.FC = () => {
             {isCreating ? 'Creating...' : 'Submit'}
             {isCreating && <Spinner tw="ml-1" />} */}
 
-          <LightButton disabled={formState.errors && !formState.dirtyFields ? true : false}>
+          <LightButton disabled={!address || (formState.errors && !formState.dirtyFields)}>
             {isSubmitting ? 'Creating...' : 'Submit'}
             {isSubmitting && <Spinner tw="ml-1" />}
           </LightButton>

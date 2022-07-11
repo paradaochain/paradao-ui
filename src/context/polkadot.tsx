@@ -32,24 +32,27 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
   const loadWallet = useCallback(async () => {
     const extensions = await web3Enable('Para DAO');
     if (extensions.length > 0) {
-      setHasExtension(true)
+      setHasExtension(true);
     } else {
       return;
     }
     const accounts = await web3Accounts();
     if (accounts.length > 0) {
-      setAccounts(accounts.map(a => ({name: a.meta.name as string, address: a.address as string})));
-    };
+      setAccounts(accounts.map((a) => ({ name: a.meta.name as string, address: a.address as string })));
+    }
   }, [api, factoryService]);
 
-  const setAddress = useCallback(async (this_addr: string) => {
-    const { signer } = await web3FromAddress(this_addr);
-    if (!api || !factoryService) return;
-    setAddr(this_addr);
-    api.setSigner(signer);
-    factoryService.setUserAddress(this_addr);
-    setSession({ allowConnection: true });
-  }, [api, factoryService]);
+  const setAddress = useCallback(
+    async (this_addr: string) => {
+      const { signer } = await web3FromAddress(this_addr);
+      if (!api || !factoryService) return;
+      setAddr(this_addr);
+      api.setSigner(signer);
+      factoryService.setUserAddress(this_addr);
+      setSession({ allowConnection: true });
+    },
+    [api, factoryService]
+  );
 
   const disconnectWallet = useCallback(() => {
     setAddr(undefined);
@@ -71,9 +74,20 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
   if (!api?.isConnected) return fallback;
 
   return (
-    <PolakdotContext.Provider value={{
-      api, factoryService, loadWallet, address, disconnectWallet, hasExtension, accounts, setAddress 
-    } as PolkadotContextState}>
+    <PolakdotContext.Provider
+      value={
+        {
+          api,
+          factoryService,
+          loadWallet,
+          address,
+          disconnectWallet,
+          hasExtension,
+          accounts,
+          setAddress
+        } as PolkadotContextState
+      }
+    >
       {children}
     </PolakdotContext.Provider>
   );
