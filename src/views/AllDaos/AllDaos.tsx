@@ -37,7 +37,7 @@ const AllDaos: React.FC = () => {
         <h1 tw="ml-2 text-2xl text-blue-800">All DAOs</h1>
         <Button onClick={() => setLocation('/create')}>Create a new DAO</Button>
       </div>
-      <div tw="w-full grid grid-cols-[repeat(auto-fit,minmax(384px,1fr))] gap-4">
+      <div tw="w-full grid grid-cols-[repeat(auto-fit,minmax(384px,1fr))] gap-14">
         {daos.map((dao, i) => (
           <DaoCard key={`${dao.name}${i}`} {...dao} />
         ))}
