@@ -26,9 +26,9 @@ const DaoDetail: React.FC = () => {
   const [tsDaoChanged, setTsDaoChanged] = useState<number>(Date.now());
   const [addModalStatus, setAddModalStatus] = useState(false);
   const [addPMModalStatus, setAddPMModalStatus] = useState(false);
+  const [pm, setPm] = useState<string[]>([]);
 
   const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting), [proposals]);
-  const predictionsMarkets = useMemo(() => getPmFromDao(daoInfo?.address as string), [daoInfo]);
 
   useEffect(() => {
     if (!params?.daoAddress) return goToPage('/');
@@ -45,6 +45,17 @@ const DaoDetail: React.FC = () => {
     if (!daoService || !address) return;
     daoService.setUserAddress(address);
   }, [address]);
+
+  useEffect(() => {
+    const updatePm = () => {
+      const pms = getPmFromDao(daoInfo?.address as string);
+      console.log(pms);
+      setPm(pms || []);
+    };
+    window.addEventListener('storage', updatePm);
+    updatePm();
+    return () => window.removeEventListener('storage', updatePm);
+  }, []);
 
   useEffect(() => {
     if (!daoInfo || !daoService) return;
@@ -145,7 +156,7 @@ const DaoDetail: React.FC = () => {
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Prediction Markets</h3>
-          <h3 className="font-bold text-md text-center">{predictionsMarkets?.length}</h3>
+          <h3 className="font-bold text-md text-center">{pm?.length}</h3>
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Proposals</h3>
