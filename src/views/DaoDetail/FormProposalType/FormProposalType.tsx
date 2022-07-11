@@ -10,7 +10,7 @@ const FormProposalType: React.FC<{ type: ProposalTypes; daoService: DAOService }
     case ProposalTypes.Membership:
       return <>Membership</>;
     case ProposalTypes.Treasury:
-			return <TreasuryForm daoService={daoService as DAOService} />;
+      return <TreasuryForm daoService={daoService as DAOService} />;
     case ProposalTypes.UpdateMetadata:
       return <UpdateMetadata daoService={daoService as DAOService} />;
     case ProposalTypes.UpdateFee:

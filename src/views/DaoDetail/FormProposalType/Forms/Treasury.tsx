@@ -7,7 +7,7 @@ import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
 import { usePolkadot } from '@context/polkadot';
-import {DAOService} from '@services/dao';
+import { DAOService } from '@services/dao';
 
 interface TreasuryInputs {
   title: string;
@@ -27,18 +27,18 @@ const resolver = yupResolver(
     .required()
 );
 
-const TreasuryForm: React.FC<{daoService: DAOService}> = ({daoService}) => {
+const TreasuryForm: React.FC<{ daoService: DAOService }> = ({ daoService }) => {
   const { register, handleSubmit, setError, formState } = useForm<TreasuryInputs>({ resolver });
   const { errors, isSubmitting } = formState;
   const address = usePolkadot();
 
   const onSubmit: SubmitHandler<TreasuryInputs> = async ({ title, balance, address, ...metadata }) => {
     const proposal = { Treasury: [address, balance] };
-	try {
-		await daoService.propose(proposal, title, metadata);
-	} catch (e) {
-		console.log(e)
-	}
+    try {
+      await daoService.propose(proposal, title, metadata);
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>

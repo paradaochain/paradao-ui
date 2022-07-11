@@ -8,7 +8,7 @@ import { DAOService } from '@services/dao';
 export interface IModalOptions {
   status: boolean;
   closeModal: () => void;
-  daoService: DAOService
+  daoService: DAOService;
 }
 
 const NewProposalModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, closeModal, daoService }) => {
@@ -42,7 +42,7 @@ const NewProposalModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, 
         <Dropdown options={proposalTypesOptions}>{type}</Dropdown>
       </div>
       <div>
-		 <FormProposalType type={type as ProposalTypes} daoService={daoService as DAOService}/>
+        <FormProposalType type={type as ProposalTypes} daoService={daoService as DAOService} />
       </div>
     </Modal>
   );
