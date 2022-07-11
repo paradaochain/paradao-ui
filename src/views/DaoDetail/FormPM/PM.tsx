@@ -12,8 +12,12 @@ import ZeitgeistService from '@services/zeitgeist';
 interface PMForm {
   question: string;
   description: string;
-  assetNames: string[];
-  assetTickers: string[];
+  assetName1: string;
+  assetTicker1: string;
+  assetName2: string;
+  assetTicker2: string;
+  assetName3: string;
+  assetTicker3: string;
 }
 
 const resolver = yupResolver(
@@ -35,13 +39,13 @@ const PMForm: React.FC = () => {
   // const zg_ws = import.meta.env.VITE_ZG_WS_URL;
   // const zg_service = new ZeitgeistService(zg_ws);
 
-  // const onSubmit: SubmitHandler<PMForm> = async ({ question, assetNames, assetTickers, ...metadata }) => {
-  //   try {
+  const onSubmit: SubmitHandler<PMForm> = async ({ question, assetName1, assetTicker1, assetName2, assetTicker2, assetName3, assetTicker3, ...metadata }) => {
+    try {
 
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <form className="flex flex-col w-full">
       <div className="grid ">
@@ -49,8 +53,16 @@ const PMForm: React.FC = () => {
         <Input type="text" placeholder="Description" {...register('description')} error={errors.description} />
       </div>
       <div className="grid grid-cols-2 gap-5">
-        <Input type="text" placeholder="Asset Name" {...register('assetNames')} error={errors.question} />
-        <Input type="text" placeholder="Asset Ticker" {...register('assetTickers')} error={errors.description} />
+        <Input type="text" placeholder="Asset Name" {...register('assetName1')} error={errors.question} />
+        <Input type="text" placeholder="Asset Ticker" {...register('assetTicker1')} error={errors.description} />
+      </div>
+      <div className="grid grid-cols-2 gap-5">
+        <Input type="text" placeholder="Asset Name" {...register('assetName2')} error={errors.question} />
+        <Input type="text" placeholder="Asset Ticker" {...register('assetTicker2')} error={errors.description} />
+      </div>
+      <div className="grid grid-cols-2 gap-5">
+        <Input type="text" placeholder="Asset Name" {...register('assetName3')} error={errors.question} />
+        <Input type="text" placeholder="Asset Ticker" {...register('assetTicker3')} error={errors.description} />
       </div>
       <LightButton disabled={!address || (formState.errors && !formState.dirtyFields) ? true : false}>
         {isSubmitting ? 'Creating...' : 'Submit'}
