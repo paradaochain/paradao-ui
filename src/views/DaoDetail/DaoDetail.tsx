@@ -14,6 +14,7 @@ import NewPMModal from '@components/Modal/NewPMModal';
 import daoLogo from '../../components/icons/paradao-icon.svg';
 import SocialMediaIcons from './SocialMediaIcons/SocialMediaIcons';
 import { getPmFromDao } from '@services/localStorage';
+import PredictionMarketModal from '@components/Modal/PredictionMarketModal';
 
 const DaoDetail: React.FC = () => {
   const [, params] = useRoute('/dao/:daoAddress');
@@ -25,6 +26,7 @@ const DaoDetail: React.FC = () => {
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [tsDaoChanged, setTsDaoChanged] = useState<number>(Date.now());
   const [addModalStatus, setAddModalStatus] = useState(false);
+  const [pmModalStatus, setpmModalStatus] = useState(false);
   const [addPMModalStatus, setAddPMModalStatus] = useState(false);
   const [pm, setPm] = useState<string[]>([]);
 
@@ -170,10 +172,12 @@ const DaoDetail: React.FC = () => {
         </h2>
         <Button onClick={() => setAddPMModalStatus(true)}>New prediction market</Button>
         <Button onClick={() => setAddModalStatus(true)}>New proposal</Button>
+        <Button onClick={() => setpmModalStatus(true)}>Active PM</Button>
       </div>
       {activeProposals && <ProposalList daoService={daoService} proposalList={activeProposals} />}
       <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} daoService={daoService} />
       <NewPMModal status={addPMModalStatus} daoAddress={daoInfo.address} closeModal={() => setAddPMModalStatus(false)} />
+      <PredictionMarketModal status={pmModalStatus} daoAddress={daoInfo.address} closeModal={() => setpmModalStatus(false)} />
     </div>
   );
 };
