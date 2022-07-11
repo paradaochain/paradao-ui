@@ -1,19 +1,20 @@
 import { CategoryMetadata, DecodedMarketMetadata } from '@zeitgeistpm/sdk/dist/types';
 import SDK from '@zeitgeistpm/sdk';
 import { CreateCpmmMarketAndDeployAssetsParams } from '@zeitgeistpm/sdk/dist/types/market';
+import { Asset } from '@zeitgeistpm/types/dist/interfaces';
 import ms from 'ms';
 import { web3FromAddress } from '@polkadot/extension-dapp';
-import { Market } from '@zeitgeistpm/sdk/dist/models';
+import { Market, Swap } from '@zeitgeistpm/sdk/dist/models';
 import { Decimal } from 'decimal.js';
 
 class ZeitgeistService {
   public sdk!: SDK;
   public ZTG: number;
-  public ztgAsset: string;
+  public ztgAsset: { ztg: null };
   constructor(sdk: SDK) {
     this.sdk = sdk;
     this.ZTG = 10 ** 10;
-    this.ztgAsset = JSON.stringify({ ztg: null });
+    this.ztgAsset = { ztg: null };
   }
 
   public async getMarketInfo(marketId: number): Promise<Market> {
@@ -61,21 +62,11 @@ class ZeitgeistService {
     return tokenAmountOut;
   }
 
-  public async getAssets(market: Market) {
-    const pool = await market.getPool();
-
-    if (!pool) throw new Error('We could not find any pool assigned to this prediction market');
-
-    return await Promise.all(
-      market.outcomeAssets.map(async (a) => {
-        const assetInfo: any = a.toJSON();
-        const spotPrice = await pool.getSpotPrice(this.ztgAsset, assetInfo);
-        return { ...assetInfo, spotPrice: spotPrice.toJSON() / this.ZTG };
-      })
-    );
+  public async getAssetSpotPrice(pool: Swap, assetInfo: Asset) {
+    return pool.getSpotPrice(JSON.stringify(this.ztgAsset), assetInfo);
   }
 
-  public async buyAsset(marketId: number, asset: string, tokenAmount: number, addr: string) {
+  public async buyAsset(marketId: number, asset: Asset, tokenAmount: number, addr: string) {
     const market = await this.getMarketInfo(marketId);
     const pool = await market.getPool();
 
@@ -102,7 +93,7 @@ class ZeitgeistService {
     );
 
     await this.sdk.api.tx.swaps
-      .swapExactAmountIn(pool.poolId, (pool.assets as any).toJSON()[4], amount, asset, minOut.mul(slippage).toFixed(0), maxPrice)
+      .swapExactAmountIn(pool.poolId, this.ztgAsset, amount, asset, minOut.mul(slippage).toFixed(0), maxPrice)
       .signAndSend(addr);
   }
 

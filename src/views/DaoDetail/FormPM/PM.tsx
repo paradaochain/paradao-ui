@@ -3,11 +3,9 @@ import React from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
 import { usePolkadot } from '@context/polkadot';
-import ZeitgeistService from '@services/zeitgeist';
 
 interface PMForm {
   question: string;
@@ -32,25 +30,38 @@ const resolver = yupResolver(
 );
 
 const PMForm: React.FC = () => {
-  const { register, handleSubmit, setError, formState } = useForm<PMForm>({ resolver });
+  const { register, handleSubmit, formState } = useForm<PMForm>({ resolver });
   const { errors, isSubmitting } = formState;
-  const { address } = usePolkadot();
+  const { address, zeitgeistService } = usePolkadot();
 
-  // const zg_ws = import.meta.env.VITE_ZG_WS_URL;
-  // const zg_service = new ZeitgeistService(zg_ws);
-
-  const onSubmit: SubmitHandler<PMForm> = async ({ question, assetName1, assetTicker1, assetName2, assetTicker2, assetName3, assetTicker3, ...metadata }) => {
+  const onSubmit: SubmitHandler<PMForm> = async ({
+    question,
+    description,
+    assetName1,
+    assetTicker1,
+    assetName2,
+    assetTicker2,
+    assetName3,
+    assetTicker3
+  }) => {
     try {
-			let assetsNames = [assetName1, assetName2, assetName3];
-			let assetsTickers = [assetTicker1, assetTicker2, assetTicker3];
-			// call zeitgeist
-
+      const assetsName = [assetName1, assetName2, assetName3];
+      const assetsTicket = [assetTicker1, assetTicker2, assetTicker3];
+      await zeitgeistService.createMetadataAndPM(
+        question,
+        description,
+        assetsName,
+        assetsTicket,
+        address as string,
+        address as string,
+        '1 day'
+      );
     } catch (e) {
       console.log(e);
     }
   };
   return (
-    <form className="flex flex-col w-full">
+    <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid ">
         <Input type="text" placeholder="Question" {...register('question')} error={errors.question} />
         <Input type="text" placeholder="Description" {...register('description')} error={errors.description} />
