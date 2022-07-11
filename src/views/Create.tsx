@@ -2,7 +2,7 @@ import Input from '@components/Input/Input';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import { useLocation } from 'wouter';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
@@ -82,7 +82,6 @@ const Create: React.FC = () => {
 
   return (
     <div className="p-5 flex flex-col justify-center items-start w-full">
-      <Toaster position="top-center" reverseOrder={false} />
       <h1 className="mb-5 text-2xl text-blue-800">Create DAO</h1>
       <form className="max-w-[55rem] my-0 mx-auto bg-white rounded-lg px-3 py-8 w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-row gap-4 justify-between mb-8">

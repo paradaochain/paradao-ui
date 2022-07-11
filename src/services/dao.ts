@@ -36,7 +36,7 @@ export class DAOService extends ContractPromise {
     const funds = await this.getBalance();
     const formattedFunds = `${Number(funds) / fundsFormatter}`;
     let pms = getItem(this.address.toString());
-    if (pms == null) {
+    if (pms === null) {
       pms = { totalPms: 0, proposalPms: {} };
     }
     return {
@@ -116,7 +116,28 @@ export class DAOService extends ContractPromise {
 
   async propose(proposalType: unknown, title: string, proposalMetadata: unknown) {
     const metadataUrl = await uploadMetada(proposalMetadata);
-    await this.tx.propose({ storageDepositLimit, gasLimit }, proposalType, title, metadataUrl).signAndSend(this._address as string);
+    return await new Promise(async (resolve, reject) => {
+      setTimeout(reject, 120000);
+      const unsubscribe = await this.tx
+        .propose({ storageDepositLimit, gasLimit }, proposalType, title, metadataUrl)
+        .signAndSend(this._address as string, (result) => {
+          if (result.status.isInBlock) {
+            result.events.forEach(({ event: { data, method, section }, phase }) => {
+              // console.log('\t', phase.toString(), `: ${section}.${method}`, data.toString());
+              if (method.toLowerCase().includes('fail')) {
+                reject(`Failed to propose ${title}`);
+                console.log(` ~ FAILED TO VOTE ON ${title} ~`, `${phase.toString()} : ${method} --> ${data.toString()}`);
+              } else if (method.toLowerCase().includes('success')) {
+                resolve(`proposed ${title}}`);
+              }
+            });
+          } else if (result.status.isFinalized) {
+            unsubscribe();
+          } else if (result.isError) {
+            reject(result.status.toString());
+          }
+        });
+    });
   }
 
   async createTreasuryProposal(daoInfoMetadata: unknown, title: string, proposalMetadata: unknown) {

@@ -1,6 +1,6 @@
 import Button from '@components/Button/Button';
 import React, { useEffect, useMemo, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import ProposalList from '@components/ProposalList/ProposalList';
 import { ProposalWithId } from '@interfaces/Proposal';
 import { useLocation, useRoute } from 'wouter';
@@ -97,7 +97,6 @@ const DaoDetail: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-full p-5 relative">
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="rounded-lg w-full flex">
         <div className="max-w-[8rem]">
           <img className="w-full rounded-full" src={daoInfo.logo ? daoInfo.logo : daoLogo} />
@@ -144,7 +143,7 @@ const DaoDetail: React.FC = () => {
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Prediction Markets</h3>
-          <h3 className="font-bold text-md text-center">{daoInfo.totalPms}</h3>
+          <h3 className="font-bold text-md text-center">{daoInfo.pms}</h3>
         </div>
         <div className="bg-white rounded-md p-3">
           <h3 className="font-bold text-xl text-center">All Proposals</h3>

@@ -7,7 +7,7 @@ interface DAO {
   members: number | null;
   totalProposals: number | null;
   links?: Record<string, string>;
-  totalPms: number | null;
+  pms: number | null;
   // proposal id to pm id
   proposalPms: Record<number, number>;
 }

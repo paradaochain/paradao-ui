@@ -3,15 +3,9 @@ import React from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
-import InputSubmit from '@components/Input/InputSubmit';
-import { BsDiscord } from 'react-icons/bs';
-import { BsInstagram } from 'react-icons/bs';
-import { BsYoutube } from 'react-icons/bs';
-import { BiWorld } from 'react-icons/bi';
-import InputIcon from '@components/Input/InputIcon';
+import { DAOService } from '@services/dao';
 import { usePolkadot } from '@context/polkadot';
 
 interface UpdateFeeInputs {
@@ -26,7 +20,7 @@ const resolver = yupResolver(
     .required()
 );
 
-const UpdateFee: React.FC = () => {
+const UpdateFee: React.FC<{ close: () => void }> = () => {
   const { register, handleSubmit, setValue, formState } = useForm<UpdateFeeInputs>({ resolver });
   const { errors, isSubmitting } = formState;
   const { address } = usePolkadot();

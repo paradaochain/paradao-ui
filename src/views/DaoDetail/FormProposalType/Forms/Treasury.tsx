@@ -8,6 +8,7 @@ import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
 import { usePolkadot } from '@context/polkadot';
 import { DAOService } from '@services/dao';
+import toast from 'react-hot-toast';
 
 interface TreasuryInputs {
   title: string;
@@ -27,17 +28,29 @@ const resolver = yupResolver(
     .required()
 );
 
-const TreasuryForm: React.FC<{ daoService: DAOService }> = ({ daoService }) => {
+const TreasuryForm: React.FC<{ daoService: DAOService; close: () => void }> = ({ daoService, close }) => {
   const { register, handleSubmit, setError, formState } = useForm<TreasuryInputs>({ resolver });
   const { errors, isSubmitting } = formState;
-  const address = usePolkadot();
+  const { address } = usePolkadot();
+  const [isProposing, setIsProposing] = useState<boolean>(false);
 
   const onSubmit: SubmitHandler<TreasuryInputs> = async ({ title, balance, address, ...metadata }) => {
     const proposal = { Treasury: [address, balance] };
+    setIsProposing(true);
+    setTimeout(() => {
+      setIsProposing(false);
+      toast.error('Could not propose now :( Try again?');
+    }, 120000);
+    toast('Proposing... :)');
     try {
       await daoService.propose(proposal, title, metadata);
+      setIsProposing(false);
+      toast.success('Successfully proposed!');
+      setTimeout(() => close(), 1000);
     } catch (e) {
       console.log(e);
+      setIsProposing(false);
+      toast.error(`Could not propose ${e}`);
     }
   };
   return (
@@ -49,8 +62,8 @@ const TreasuryForm: React.FC<{ daoService: DAOService }> = ({ daoService }) => {
       <Input type="text" placeholder="Address" {...register('address')} error={errors.address} className="w-full" />
       <TextArea label="Description" {...register('description')} error={errors.description?.message} />
       <LightButton disabled={!address || (formState.errors && !formState.dirtyFields)}>
-        {isSubmitting ? 'Creating...' : 'Submit'}
-        {isSubmitting && <Spinner tw="ml-1" />}
+        {isSubmitting || isProposing ? 'Creating...' : 'Submit'}
+        {(isSubmitting || isProposing) && <Spinner tw="ml-1" />}
       </LightButton>
     </form>
   );

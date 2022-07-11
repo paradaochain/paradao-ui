@@ -9,6 +9,7 @@ import { SearchIcon, MenuIcon, WalletIcon } from '@icons/mui';
 import { usePolkadot } from '@context/polkadot';
 import LightButton from './Button/LightButton';
 import WalletModal from '@components/WalletModal';
+import { Toaster } from 'react-hot-toast';
 
 const ScreenContainer = tw.main`h-screen flex flex-col`;
 const ContentContainer = tw.div`p-6 flex flex-col flex-1 justify-start items-start bg-blue-50 overflow-y-auto`;
@@ -19,6 +20,7 @@ const Layout: FC<PropsWithChildren> = ({ children: Component }) => {
 
   return (
     <ScreenContainer>
+      <Toaster position="top-center" reverseOrder={false} />
       <div tw="flex flex-1 overflow-hidden">
         {/* TODO  mobile menu */}
         {!isMobile && <Sidebar showModal={() => setShowWalletModal(true)} />}

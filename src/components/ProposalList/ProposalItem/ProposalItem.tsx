@@ -6,7 +6,7 @@ import { ProposalStatus } from '@interfaces/ProposalStatus';
 import { DAOService } from '@services/dao';
 import { IntlAddress } from '@utils/Intl';
 import React, { useCallback, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { usePolkadot } from '@context/polkadot';
 import { WhiteSpinner } from '@components/Spinner/Spinner';
 
@@ -50,7 +50,6 @@ const ProposalItem: React.FC<ProposalWithId & Props> = ({ id, title, proposer, t
   return (
     <>
       <div className="w-full bg-white rounded-lg p-3 ">
-        <Toaster position="top-center" reverseOrder={false} />
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold mb-4">{title}</h2>
           <Button onClick={() => setModal(true)}>Details</Button>

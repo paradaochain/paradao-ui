@@ -42,7 +42,7 @@ const NewProposalModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, 
         <Dropdown options={proposalTypesOptions}>{type}</Dropdown>
       </div>
       <div>
-        <FormProposalType type={type as ProposalTypes} daoService={daoService as DAOService} />
+        <FormProposalType type={type as ProposalTypes} daoService={daoService as DAOService} close={closeModal} />
       </div>
     </Modal>
   );
