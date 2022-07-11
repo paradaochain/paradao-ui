@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
 import { usePolkadot } from '@context/polkadot';
+import toast from 'react-hot-toast';
 
 interface PMForm {
   question: string;
@@ -29,8 +30,8 @@ const resolver = yupResolver(
     .required()
 );
 
-const PMForm: React.FC = () => {
-  const { register, handleSubmit, formState } = useForm<PMForm>({ resolver });
+const PMForm: React.FC<{ daoAddress: string; closeModal: () => void }> = ({ daoAddress, closeModal }) => {
+  const { register, handleSubmit, formState } = useForm<PMForm>({});
   const { errors, isSubmitting } = formState;
   const { address, zeitgeistService } = usePolkadot();
 
@@ -47,15 +48,9 @@ const PMForm: React.FC = () => {
     try {
       const assetsName = [assetName1, assetName2, assetName3];
       const assetsTicket = [assetTicker1, assetTicker2, assetTicker3];
-      await zeitgeistService.createMetadataAndPM(
-        question,
-        description,
-        assetsName,
-        assetsTicket,
-        address as string,
-        address as string,
-        '1 day'
-      );
+      await zeitgeistService.createMetadataAndPM(question, description, assetsName, assetsTicket, address as string, daoAddress, '1 day');
+      toast.success('Prediction Market Created');
+      closeModal();
     } catch (e) {
       console.log(e);
     }
@@ -78,7 +73,7 @@ const PMForm: React.FC = () => {
         <Input type="text" placeholder="Asset Name" {...register('assetName3')} error={errors.question} />
         <Input type="text" placeholder="Asset Ticker" {...register('assetTicker3')} error={errors.description} />
       </div>
-      <LightButton disabled={!address || (formState.errors && !formState.dirtyFields) ? true : false}>
+      <LightButton disabled={!address}>
         {isSubmitting ? 'Creating...' : 'Submit'}
         {isSubmitting && <Spinner tw="ml-1" />}
       </LightButton>

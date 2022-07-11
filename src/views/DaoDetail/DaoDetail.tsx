@@ -160,7 +160,7 @@ const DaoDetail: React.FC = () => {
       </div>
       {activeProposals && <ProposalList daoService={daoService} proposalList={activeProposals} />}
       <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} daoService={daoService} />
-      <NewPMModal status={addPMModalStatus} closeModal={() => setAddPMModalStatus(false)} />
+      <NewPMModal status={addPMModalStatus} daoAddress={daoInfo.address} closeModal={() => setAddPMModalStatus(false)} />
     </div>
   );
 };

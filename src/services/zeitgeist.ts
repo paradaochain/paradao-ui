@@ -6,6 +6,7 @@ import ms from 'ms';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { Market, Swap } from '@zeitgeistpm/sdk/dist/models';
 import { Decimal } from 'decimal.js';
+import { setPmIntoDao } from './localStorage';
 
 class ZeitgeistService {
   public sdk!: SDK;
@@ -104,7 +105,6 @@ class ZeitgeistService {
               }
             });
           } else if (result.status.isFinalized) {
-            console.log('dao create finalized');
             unsubscribe();
           } else if (result.isError) {
             reject(result.status.toString());
@@ -160,6 +160,7 @@ class ZeitgeistService {
             if (result.status.isInBlock) {
               result.events.forEach(({ event: { data, method, section } }) => {
                 if (section == 'predictionMarkets' && method == 'MarketCreated') {
+                  setPmIntoDao(oracle, data[0].toString());
                   resolve(data[0].toString());
                 }
               });

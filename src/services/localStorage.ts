@@ -33,3 +33,13 @@ export const getSession = (): Session | null => {
 export const deleteSession = (): void => {
   deleteItem('session');
 };
+
+export const getPmFromDao = (dao: string): string[] | null => {
+  return getItem<string[]>(`${dao}#pm`);
+};
+
+export const setPmIntoDao = (dao: string, pmId: string): void => {
+  const pmArray = getPmFromDao(dao) || [];
+  pmArray.push(pmId);
+  setItem(`${dao}#pm`, pmArray);
+};
