@@ -33,4 +33,5 @@ yarn dev
 3. Head over to paradao.space 🚀
 
 _Note: the Paradao Parachain has a block time of 12 seconds, please be patient_
+
 _Note: if you made the proposal, your vote has been counted and you cannot use the same account to vote again_
