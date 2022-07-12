@@ -7,6 +7,7 @@ export interface PMOptions {
   assetsPrice: string[];
 }
 export interface PredictionMarket {
+  id: number;
   question: string;
   description: string;
   ends: string;

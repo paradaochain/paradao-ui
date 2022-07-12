@@ -4,7 +4,7 @@ import { CreateCpmmMarketAndDeployAssetsParams } from '@zeitgeistpm/sdk/dist/typ
 import { Asset } from '@zeitgeistpm/types/dist/interfaces';
 import ms from 'ms';
 import { web3FromAddress } from '@polkadot/extension-dapp';
-import { Market, Swap } from '@zeitgeistpm/sdk/dist/models';
+import { Market } from '@zeitgeistpm/sdk/dist/models';
 import { Decimal } from 'decimal.js';
 import { setPmIntoDao } from './localStorage';
 
@@ -79,8 +79,11 @@ class ZeitgeistService {
     return tokenAmountOut;
   }
 
-  public async getAssetSpotPrice(pool: Swap, assetInfo: Asset) {
-    return pool.getSpotPrice(JSON.stringify(this.ztgAsset), assetInfo);
+  public async getAssetSpotPrice(marketId: number, assetInfo: Asset) {
+    const market = await this.getMarketInfo(marketId);
+    const pool = await market.getPool();
+    const price = await pool?.getSpotPrice(JSON.stringify(this.ztgAsset), assetInfo);
+    return price.toJSON() / this.ZTG;
   }
 
   public async buyAsset(marketId: number, asset: Asset, tokenAmount: number, addr: string) {

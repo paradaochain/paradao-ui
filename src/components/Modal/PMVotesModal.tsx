@@ -13,6 +13,7 @@ const PMVotesModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, clos
   const categoriesItem = PM.options.assets.map((asset, i) => (
     <PMAssetItem
       key={asset.toString() + i}
+      marketId={PM.id}
       asset={asset}
       price={PM.options.assetsPrice[i]}
       {...PM.options.assetsInfo[i]}

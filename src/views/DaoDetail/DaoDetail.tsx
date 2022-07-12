@@ -31,7 +31,10 @@ const DaoDetail: React.FC = () => {
   const [addPMModalStatus, setAddPMModalStatus] = useState(false);
   const [pm, setPm] = useState<PredictionMarket[]>([]);
 
-  const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting || proposal.status === ProposalStatus.Passed), [proposals]);
+  const activeProposals = useMemo(
+    () => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting || proposal.status === ProposalStatus.Passed),
+    [proposals]
+  );
 
   useEffect(() => {
     if (!params?.daoAddress) return goToPage('/');
@@ -50,6 +53,7 @@ const DaoDetail: React.FC = () => {
   }, [address]);
 
   useEffect(() => {
+    if (addPMModalStatus) return;
     const updatePm = async () => {
       const pms = getPmFromDao(params?.daoAddress as string);
       if (!pms?.length) return;
@@ -58,6 +62,7 @@ const DaoDetail: React.FC = () => {
           const market = await zeitgeistService.getMarketInfo(+pm);
           const assets = await zeitgeistService.getAssetsInfoFromMarketId(+pm);
           return {
+            id: +pm,
             question: market.question,
             description: market.description,
             ends: new Intl.DateTimeFormat('es-US', { dateStyle: 'full' }).format(await market.getEndTimestamp()),
@@ -68,9 +73,7 @@ const DaoDetail: React.FC = () => {
       setPm(markets as unknown as PredictionMarket[]);
     };
     updatePm();
-    window.addEventListener('storage', updatePm);
-    return () => window.removeEventListener('storage', updatePm);
-  }, []);
+  }, [addPMModalStatus]);
 
   useEffect(() => {
     if (!daoInfo || !daoService) return;
@@ -81,8 +84,7 @@ const DaoDetail: React.FC = () => {
         Array.from({ length: daoInfo.totalProposals as number }, async (_, i) => {
           const proposal = await daoService.proposalInfo(i);
           if (!proposal) return;
-          const status =
-            proposal.status === ProposalStatus.Voting && height >= proposal.expires ? ProposalStatus.Expired : proposal.status;
+          const status = proposal.status === ProposalStatus.Voting && height >= proposal.expires ? ProposalStatus.Expired : proposal.status;
           return { ...proposal, id: i, status };
         })
       );
