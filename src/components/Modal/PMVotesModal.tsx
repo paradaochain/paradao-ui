@@ -11,7 +11,13 @@ export interface IModalOptions {
 
 const PMVotesModal: React.FC<PropsWithChildren<IModalOptions>> = ({ status, closeModal, PM }) => {
   const categoriesItem = PM.options.assets.map((asset, i) => (
-    <PMAssetItem key={asset.toString() + i} asset={asset} price={PM.options.assetsPrice[i]} {...PM.options.assetsInfo[i]} />
+    <PMAssetItem
+      key={asset.toString() + i}
+      asset={asset}
+      price={PM.options.assetsPrice[i]}
+      {...PM.options.assetsInfo[i]}
+      closeModal={closeModal}
+    />
   ));
   return (
     <Modal status={status} closeModal={closeModal}>
