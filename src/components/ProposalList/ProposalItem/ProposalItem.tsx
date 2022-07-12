@@ -35,7 +35,7 @@ const ProposalItem: React.FC<ProposalWithId & Props> = ({ id, title, proposer, t
         setIsVotingYes(false);
         setIsVotingNo(false);
         toast.success('Successfully voted!');
-        setTimeout(() => setModal(false), 1000);
+        //setTimeout(() => setModal(false), 1000);
       } catch (e) {
         // display err
         console.log(e);
@@ -80,10 +80,10 @@ const ProposalItem: React.FC<ProposalWithId & Props> = ({ id, title, proposer, t
             <p className="text-md font-semibold text-gray-500">{title}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500">Required</p>
-            <p>{threshold * 100}%</p>
+            <p className="text-xs text-gray-500">Threshold</p>
+            <p>{threshold} Votes</p>
           </div>
-          <p className="text-xs text-gray-500">Votes Option</p>
+          <p className="text-xs text-gray-500">Options</p>
           <div className="flex justify-between">
             <LightButton className="min-w-[50px]" onClick={() => handleVote(true)} disabled={!address || votingYes || votingNo}>
               {votingYes ? <WhiteSpinner /> : 'Yes'}

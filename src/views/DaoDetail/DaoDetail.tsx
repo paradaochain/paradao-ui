@@ -31,7 +31,7 @@ const DaoDetail: React.FC = () => {
   const [addPMModalStatus, setAddPMModalStatus] = useState(false);
   const [pm, setPm] = useState<PredictionMarket[]>([]);
 
-  const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting), [proposals]);
+  const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting || proposal.status === ProposalStatus.Passed), [proposals]);
 
   useEffect(() => {
     if (!params?.daoAddress) return goToPage('/');
@@ -82,7 +82,7 @@ const DaoDetail: React.FC = () => {
           const proposal = await daoService.proposalInfo(i);
           if (!proposal) return;
           const status =
-            proposal.status === ProposalStatus.Voting && height >= proposal.expires ? ProposalStatus.Expired : ProposalStatus.Voting;
+            proposal.status === ProposalStatus.Voting && height >= proposal.expires ? ProposalStatus.Expired : proposal.status;
           return { ...proposal, id: i, status };
         })
       );
