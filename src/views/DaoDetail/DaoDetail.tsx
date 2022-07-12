@@ -1,5 +1,5 @@
 import Button from '@components/Button/Button';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import ProposalList from '@components/ProposalList/ProposalList';
 import { ProposalWithId } from '@interfaces/Proposal';
@@ -14,21 +14,22 @@ import NewPMModal from '@components/Modal/NewPMModal';
 import daoLogo from '../../components/icons/paradao-icon.svg';
 import SocialMediaIcons from './SocialMediaIcons/SocialMediaIcons';
 import { getPmFromDao } from '@services/localStorage';
-import PredictionMarketModal from '@components/Modal/PredictionMarketModal';
+import Dropdown from '@components/Dropdown/Dropdown';
+import PredictionMarketList from '@components/PredictionMarketList/PredictionMarketList';
+import { PredictionMarket } from '@interfaces/PredictionMarket';
 
 const DaoDetail: React.FC = () => {
   const [, params] = useRoute('/dao/:daoAddress');
   const [, goToPage] = useLocation();
-  const { api, address } = usePolkadot();
+  const { api, address, zeitgeistService } = usePolkadot();
   const [daoInfo, setDaoInfo] = useState<DAO | null>(null);
   const [daoService, setDaoService] = useState<DAOService | null>(null);
   const [proposals, setProposals] = useState<ProposalWithId[]>();
   const [isJoining, setIsJoining] = useState<boolean>(false);
   const [tsDaoChanged, setTsDaoChanged] = useState<number>(Date.now());
   const [addModalStatus, setAddModalStatus] = useState(false);
-  const [pmModalStatus, setpmModalStatus] = useState(false);
   const [addPMModalStatus, setAddPMModalStatus] = useState(false);
-  const [pm, setPm] = useState<string[]>([]);
+  const [pm, setPm] = useState<PredictionMarket[]>([]);
 
   const activeProposals = useMemo(() => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting), [proposals]);
 
@@ -49,13 +50,25 @@ const DaoDetail: React.FC = () => {
   }, [address]);
 
   useEffect(() => {
-    const updatePm = () => {
-      const pms = getPmFromDao(daoInfo?.address as string);
-      console.log(pms);
-      setPm(pms || []);
+    const updatePm = async () => {
+      const pms = getPmFromDao(params?.daoAddress as string);
+      if (!pms?.length) return;
+      const markets = await Promise.all(
+        pms.map(async (pm) => {
+          const market = await zeitgeistService.getMarketInfo(+pm);
+          const assets = await zeitgeistService.getAssetsInfoFromMarketId(+pm);
+          return {
+            question: market.question,
+            description: market.description,
+            ends: new Intl.DateTimeFormat('es-US', { dateStyle: 'full' }).format(await market.getEndTimestamp()),
+            options: assets
+          };
+        })
+      );
+      setPm(markets as unknown as PredictionMarket[]);
     };
-    window.addEventListener('storage', updatePm);
     updatePm();
+    window.addEventListener('storage', updatePm);
     return () => window.removeEventListener('storage', updatePm);
   }, []);
 
@@ -110,6 +123,11 @@ const DaoDetail: React.FC = () => {
     callJoin();
   };
 
+  const actionOptions = [
+    { name: 'New prediction market', click: () => setAddPMModalStatus(true) },
+    { name: 'New proposal', click: () => setAddModalStatus(true) }
+  ];
+
   return (
     <div className="flex flex-col justify-center items-center w-full h-full p-5 relative">
       <div className="rounded-lg w-full flex">
@@ -129,7 +147,7 @@ const DaoDetail: React.FC = () => {
               <p className="text-xs text-gray-500">Proposals</p>
               <p>{daoInfo.totalProposals}</p>
             </div>
-            {daoInfo.links && (
+            {daoInfo.links?.length && (
               <>
                 <span className="w-[1px] bg-gray-300 h-[80%]"></span>
                 <div className="text-center font-bold">
@@ -170,14 +188,14 @@ const DaoDetail: React.FC = () => {
         <h2 className="font-bold text-2xl">
           Engagement <span className="bg-gray-200 p-2 rounded-full">{activeProposals?.length}</span>
         </h2>
-        <Button onClick={() => setAddPMModalStatus(true)}>New prediction market</Button>
-        <Button onClick={() => setAddModalStatus(true)}>New proposal</Button>
-        <Button onClick={() => setpmModalStatus(true)}>Active PM</Button>
+        <div className="flex gap-5">
+          <Dropdown options={actionOptions}>New...</Dropdown>
+        </div>
       </div>
+      <PredictionMarketList list={pm} />
       {activeProposals && <ProposalList daoService={daoService} proposalList={activeProposals} />}
       <NewProposalModal status={addModalStatus} closeModal={() => setAddModalStatus(false)} daoService={daoService} />
       <NewPMModal status={addPMModalStatus} daoAddress={daoInfo.address} closeModal={() => setAddPMModalStatus(false)} />
-      <PredictionMarketModal status={pmModalStatus} daoAddress={daoInfo.address} closeModal={() => setpmModalStatus(false)} />
     </div>
   );
 };

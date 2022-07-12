@@ -35,11 +35,11 @@ export const deleteSession = (): void => {
 };
 
 export const getPmFromDao = (dao: string): string[] | null => {
-  return getItem<string[]>(`${dao}#pm`);
+  return getItem<string[]>(`${dao}`);
 };
 
 export const setPmIntoDao = (dao: string, pmId: string): void => {
   const pmArray = getPmFromDao(dao) || [];
   pmArray.push(pmId);
-  setItem(`${dao}#pm`, pmArray);
+  setItem(`${dao}`, pmArray);
 };

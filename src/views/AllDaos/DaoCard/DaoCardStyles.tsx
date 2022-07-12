@@ -1,6 +1,6 @@
 import tw from 'twin.macro';
 
-export const CardContainer = tw.div`p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer width[440px]`;
+export const CardContainer = tw.div`p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer max-w-[440px] mx-auto my-0`;
 export const CardHeader = tw.div`flex flex-row justify-start items-start space-x-4 w-full`;
 export const CardDescrip = tw.div`w-full`;
 export const CardStats = tw.div`w-full flex flex-row justify-around`;

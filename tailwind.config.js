@@ -12,7 +12,7 @@ module.exports = {
         '.truncate-3-lines': {
           overflow: 'hidden',
           'text-overflow': 'ellipsis',
-          'white-space': 'nowrap',
+          'white-space': 'normal',
           display: '-webkit-box',
           '-webkit-line-clamp': '3',
           'line-clamp': '3',

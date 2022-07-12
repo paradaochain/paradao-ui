@@ -71,7 +71,8 @@ const PolkadorProvider: React.FC<PropsWithChildren<Props>> = ({ children, fallba
 
   useEffect(() => {
     loadApi().then(async (api: ApiPromise) => {
-      const sdk = await SDK.initialize('ws://127.0.0.1:8844');
+      const ws_url = import.meta.env.VITE_ZG_WS_URL;
+      const sdk = await SDK.initialize(ws_url);
       setApi(api);
       setZeitgeistService(new ZeitgeistService(sdk));
       setFactoryService(new FactoryService(api));

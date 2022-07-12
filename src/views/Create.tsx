@@ -96,7 +96,7 @@ const Create: React.FC = () => {
             <InputSubmit setLogo={setLogo} />
           </div>
         </div>
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-4 gap-8">
           <InputIcon type="text" placeholder="Website" {...register('links.website')} error={errors.links?.website} icon={<BiWorld />} />
           <InputIcon type="text" placeholder="Discord" {...register('links.discord')} error={errors.links?.discord} icon={<BsDiscord />} />
           <InputIcon

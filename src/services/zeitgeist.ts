@@ -22,6 +22,22 @@ class ZeitgeistService {
     return await this.sdk.models.fetchMarketData(marketId);
   }
 
+  public async getAssetsInfoFromMarketId(marketId: number) {
+    const market = await this.getMarketInfo(marketId);
+    const assets = market.outcomeAssets.map((a) => a.toJSON()) as unknown as Asset[];
+    const assetsPrice = await market.assetSpotPricesInZtg();
+    return {
+      assets,
+      assetsInfo: market.categories,
+      assetsPrice: Object.values(assetsPrice).map((price) => (Number(price) / this.ZTG).toFixed(4))
+    };
+  }
+
+  public async getAssetBalanceFromAddress(address: string, asset: Asset) {
+    const balance = await this.sdk.api.query.tokens.accounts(address, this.sdk.api.createType('Asset', asset));
+    return ((balance.toJSON() as { free: number })?.free / this.ZTG).toFixed(2);
+  }
+
   public createCategoryMeatadata(names: string[], tickers: string[]) {
     const categories = [];
     for (let i = 0; i < names.length; i++) {
