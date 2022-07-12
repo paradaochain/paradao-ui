@@ -39,9 +39,9 @@ const AllDaos: React.FC = () => {
         <Button onClick={() => setLocation('/create')}>Create a new DAO</Button>
       </div>
       <div
-        className={clsx('w-full grid gap-5', {
-          'grid-cols-[repeat(auto-fit,minmax(440px,1fr))]': daos.length >= 3,
-          'grid-cols-3': daos.length < 3
+        className={clsx('w-full gap-14 grid-cols-[repeat(auto-fit,minmax(440px,1fr))]', {
+          'grid grid-cols-[repeat(auto-fit,minmax(440px,1fr))]': daos.length >= 4,
+          ['flex flex-row justify-start' + daos.length]: daos.length < 4
         })}
       >
         {daos.map((dao, i) => (

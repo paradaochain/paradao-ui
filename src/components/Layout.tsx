@@ -24,7 +24,7 @@ const Layout: FC<PropsWithChildren> = ({ children: Component }) => {
       <div tw="flex flex-1 overflow-hidden">
         {/* TODO  mobile menu */}
         {!isMobile && <Sidebar showModal={() => setShowWalletModal(true)} />}
-        <div tw="flex flex-1 flex-col">
+        <div tw="flex flex-1 flex-col overflow-auto">
           {/* <Header /> */}
           <ContentContainer>
             <Breadcrumbs />

@@ -186,7 +186,7 @@ const DaoDetail: React.FC = () => {
       </div>
       <div className="w-full flex my-8 justify-between items-center">
         <h2 className="font-bold text-2xl">
-          Engagement <span className="bg-gray-200 p-2 rounded-full">{activeProposals?.length}</span>
+          Engagement <span className="bg-gray-200 p-2 rounded-full">{activeProposals?.length || 0 + pm.length}</span>
         </h2>
         <div className="flex gap-5">
           <Dropdown options={actionOptions}>New...</Dropdown>
