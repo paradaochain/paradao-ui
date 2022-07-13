@@ -32,7 +32,7 @@ const DaoDetail: React.FC = () => {
   const [pm, setPm] = useState<PredictionMarket[]>([]);
 
   const activeProposals = useMemo(
-    () => proposals?.filter((proposal) => proposal.status === ProposalStatus.Voting || proposal.status === ProposalStatus.Passed),
+    () => proposals?.filter((proposal) => proposal.status != null),
     [proposals]
   );
 
