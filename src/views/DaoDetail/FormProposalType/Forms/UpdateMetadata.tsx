@@ -1,4 +1,3 @@
-import Input from '@components/Input/Input';
 import React from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,7 +5,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
 import LightButton from '@components/Button/LightButton';
 import Spinner from '@components/Spinner/Spinner';
-import InputSubmit from '@components/Input/InputSubmit';
 import { BsDiscord } from 'react-icons/bs';
 import { BsInstagram } from 'react-icons/bs';
 import { BsYoutube } from 'react-icons/bs';
@@ -14,6 +12,7 @@ import { BiWorld } from 'react-icons/bi';
 import InputIcon from '@components/Input/InputIcon';
 import { usePolkadot } from '@context/polkadot';
 import { DAOService } from '@services/dao';
+import InputFile from '@components/Input/InputFile';
 
 interface UpdateMetadataInputs {
   logo: string;
@@ -52,7 +51,7 @@ const UpdateMetadata: React.FC<{ daoService: DAOService; close: () => void }> = 
   return (
     <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-center justify-center h-[5rem] mb-2">
-        <InputSubmit setLogo={setLogo} />
+        <InputFile setLogo={setLogo} />
       </div>
       <TextArea label="Description" {...register('purpose')} error={errors.purpose?.message} />
       <div className="grid grid-cols-2 gap-5">

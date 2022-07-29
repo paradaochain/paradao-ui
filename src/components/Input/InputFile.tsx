@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import tw, { css } from 'twin.macro';
 import { fileToBase64 } from '@utils/encodings';
 import { IoClose } from 'react-icons/io5';
-import Button from '@components/Button/Button';
 
 const LabelStyle = css`
   &:hover {
@@ -14,7 +13,7 @@ const LabelStyle = css`
   }
 `;
 
-const InputSubmit = React.forwardRef<
+const InputFile = React.forwardRef<
   HTMLInputElement,
   React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & { setLogo: (s: string) => void }
 >(({ className, setLogo, ...props }, ref) => {
@@ -58,6 +57,6 @@ const InputSubmit = React.forwardRef<
   );
 });
 
-InputSubmit.displayName = 'InputSubmit';
+InputFile.displayName = 'InputFile';
 
-export default InputSubmit;
+export default InputFile;

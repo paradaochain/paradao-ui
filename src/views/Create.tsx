@@ -7,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import TextArea from '@components/Input/Textarea';
 import Dropdown from '@components/Dropdown/Dropdown';
-import InputSubmit from '@components/Input/InputSubmit';
 import InputIcon from '@components/Input/InputIcon';
 import { BsDiscord } from 'react-icons/bs';
 import { BsInstagram } from 'react-icons/bs';
@@ -16,6 +15,7 @@ import { BiWorld } from 'react-icons/bi';
 import Spinner from '@components/Spinner/Spinner';
 import LightButton from '@components/Button/LightButton';
 import { usePolkadot } from '@context/polkadot';
+import InputFile from '@components/Input/InputFile';
 interface CreateDaoInputs {
   name: string;
   purpose: string;
@@ -69,7 +69,6 @@ const Create: React.FC = () => {
       const daoAddr = await factoryService.createDao(name, metadata, type, fee);
       setLocation(`/dao/${daoAddr}`);
     } catch (e) {
-      // display err
       console.log(e);
     }
   };
@@ -93,7 +92,7 @@ const Create: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center justify-center h-[5rem]">
-            <InputSubmit setLogo={setLogo} />
+            <InputFile setLogo={setLogo} />
           </div>
         </div>
         <div className="grid grid-cols-4 gap-8">

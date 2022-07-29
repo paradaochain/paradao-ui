@@ -6,7 +6,7 @@ const LightButton: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({ classN
   return (
     <Button
       className={clsx(
-        'bg-gray-100 text-purple-700 border border-purple-700 hover:bg-purple-700 hover:text-white  focus:bg-gray-200 disabled:border-gray-600',
+        'bg-gray-100 text-purple-700 border border-purple-700 hover:bg-purple-700 hover:text-white  focus:bg-gray-200 disabled:border-gray-600 focus:text-purple-700',
         className
       )}
       {...props}
